@@ -33,6 +33,8 @@ func clear() -> void:
 
 func _input(event: InputEvent) -> void:
 	if not enabled or get_tree().paused: return
+	# Native GUI buttons need mouse emulation; combat keeps the original touch IDs.
+	if event is InputEventMouse and event.device == InputEvent.DEVICE_ID_EMULATION: return
 	if event is InputEventScreenTouch:
 		_handle_touch(event.index, event.position, event.pressed)
 	elif event is InputEventScreenDrag:
