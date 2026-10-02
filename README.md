@@ -44,6 +44,7 @@ GitHub's runner and uploads it as `ironfall-debug-apk`. See
 [workflow instructions](docs/GITHUB_ACTIONS.md). A hosted run has not yet been
 executed; this provides a build route where local network access is restricted.
 
+Uses Godot's Gradle export path to set API 26 minimum / API 36 target.
 Requires Godot 4.6.3 export templates, Java **JDK 17 or later** (not just the JRE),
 Android platform tools and build tools 36.0.0. An installation helper is provided:
 

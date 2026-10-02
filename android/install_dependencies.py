@@ -32,7 +32,7 @@ def fetch(url, destination, expected_sha256=None):
 
 def install_templates(runtime):
     destination = runtime / f"data/godot/export_templates/{GODOT_VERSION}.stable"
-    items = ("android_debug.apk", "android_release.apk")
+    items = ("android_debug.apk", "android_release.apk", "android_source.zip")
     stamp = destination / "source.sha256"
     if stamp.exists() and stamp.read_text().strip() == TEMPLATES_SHA256:
         if all(zipfile.is_zipfile(destination / item) for item in items):

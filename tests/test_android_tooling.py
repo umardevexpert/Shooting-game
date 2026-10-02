@@ -61,11 +61,11 @@ class AndroidToolingTests(unittest.TestCase):
             result = tooling.fetch("https://example.invalid/file", path, hashlib.sha256(path.read_bytes()).hexdigest())
         self.assertEqual(result, path)
 
-    def test_both_template_files_are_required_for_cache_hit(self):
+    def test_all_template_files_are_required_for_cache_hit(self):
         destination = self.root / f"data/godot/export_templates/{tooling.GODOT_VERSION}.stable"
         destination.mkdir(parents=True)
         (destination / "source.sha256").write_text(tooling.TEMPLATES_SHA256)
-        for name in ["android_debug.apk", "android_release.apk"]:
+        for name in ["android_debug.apk", "android_release.apk", "android_source.zip"]:
             with zipfile.ZipFile(destination / name, "w") as archive:
                 archive.writestr("AndroidManifest.xml", "fixture")
         with patch.object(tooling, "fetch") as fetch:

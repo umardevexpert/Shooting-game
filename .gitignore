@@ -4,6 +4,8 @@ build/*
 !build/.gitkeep
 android/sdk/
 android/jdk/
+android/build/
+.gradle/
 android/*.keystore
 *.tmp
 __pycache__/
