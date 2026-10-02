@@ -1,0 +1,85 @@
+{
+  "version": 1,
+  "sources": [
+    {
+      "name": "Swat",
+      "target": "build/human-source/Swat.glb",
+      "url": "https://raw.githubusercontent.com/trebeljahr/quaternius-showcase/e90ffea347393537703ae6f9d73e36492820f5a9/public/glb/modular_men/Swat.glb",
+      "bytes": 889396,
+      "sha256": "1bfe621cb75ab23d9ef6b2bc363479cc4e907aa035cfc4f3034e6137482b32b2",
+      "license": "CC0-1.0"
+    },
+    {
+      "name": "Casual",
+      "target": "build/human-source/Casual.glb",
+      "url": "https://raw.githubusercontent.com/trebeljahr/quaternius-showcase/e90ffea347393537703ae6f9d73e36492820f5a9/public/glb/modular_men/Casual.glb",
+      "bytes": 785308,
+      "sha256": "dc2d86e50075e372df870bb60cee46c56033cc2ecb28722523caab93ab1d0111",
+      "license": "CC0-1.0"
+    },
+    {
+      "name": "Pistol",
+      "target": "build/weapon-source/Pistol.fbx",
+      "url": "https://raw.githubusercontent.com/beep2bleep/FreeAssetsByKenneyNLandQuaternius/dea756baf3b3a4889d8c245e456a4791f961578a/FreeModels%20by%20Quaternius%5BPatreon%5D/FPS/Animated%20FPS%20Guns%20-%20Jun%202018/FBX/Pistol.fbx",
+      "bytes": 127980,
+      "sha256": "fb8b6429c89a00cc836490a3303afd248fd89b2b667b908e2d7889c6210da226",
+      "license": "CC0-1.0"
+    },
+    {
+      "name": "P90",
+      "target": "build/weapon-source/P90.fbx",
+      "url": "https://raw.githubusercontent.com/beep2bleep/FreeAssetsByKenneyNLandQuaternius/dea756baf3b3a4889d8c245e456a4791f961578a/FreeModels%20by%20Quaternius%5BPatreon%5D/FPS/Animated%20FPS%20Guns%20-%20Jun%202018/FBX/P90.fbx",
+      "bytes": 85804,
+      "sha256": "bd820ab3ba6b09c8b490023db452d3b32a80537b74199986f9f85b22edccfd9a",
+      "license": "CC0-1.0"
+    },
+    {
+      "name": "Shotgun",
+      "target": "build/weapon-source/Shotgun.fbx",
+      "url": "https://raw.githubusercontent.com/beep2bleep/FreeAssetsByKenneyNLandQuaternius/dea756baf3b3a4889d8c245e456a4791f961578a/FreeModels%20by%20Quaternius%5BPatreon%5D/FPS/Animated%20FPS%20Guns%20-%20Jun%202018/FBX/Shotgun.fbx",
+      "bytes": 121260,
+      "sha256": "5bebd5a16a5055f1f6a84fe05bcc8c9710a947bb8ce3fba2c4e485b539672d99",
+      "license": "CC0-1.0"
+    },
+    {
+      "name": "SniperRifle",
+      "target": "build/weapon-source/SniperRifle.fbx",
+      "url": "https://raw.githubusercontent.com/beep2bleep/FreeAssetsByKenneyNLandQuaternius/dea756baf3b3a4889d8c245e456a4791f961578a/FreeModels%20by%20Quaternius%5BPatreon%5D/FPS/Animated%20FPS%20Guns%20-%20Jun%202018/FBX/SniperRifle.fbx",
+      "bytes": 150492,
+      "sha256": "a27b040b2ff0b98c1f083dad5fef5742e5d88f3aa6e676d94fbd58a4c8c20775",
+      "license": "CC0-1.0"
+    },
+    {
+      "name": "AR_1",
+      "target": "build/weapon-source/AR_1.glb",
+      "url": "https://raw.githubusercontent.com/trebeljahr/quaternius-showcase/e90ffea347393537703ae6f9d73e36492820f5a9/public/glb/modular_sci_fi_guns_pack/AR_1.glb",
+      "bytes": 98500,
+      "sha256": "0370edb381d2f298efbc9ac7dd4ec11d22d3b0137bb135df1b89a2a284af9125",
+      "license": "CC0-1.0"
+    },
+    {
+      "name": "AR_4",
+      "target": "build/weapon-source/AR_4.glb",
+      "url": "https://raw.githubusercontent.com/trebeljahr/quaternius-showcase/e90ffea347393537703ae6f9d73e36492820f5a9/public/glb/modular_sci_fi_guns_pack/AR_4.glb",
+      "bytes": 195268,
+      "sha256": "d249dddf433609cccf01d1abe4f8f13d9eee4e1ba33a4bd9617598e6e6a0af60",
+      "license": "CC0-1.0"
+    },
+    {
+      "name": "AR_6",
+      "target": "build/weapon-source/AR_6.glb",
+      "url": "https://raw.githubusercontent.com/trebeljahr/quaternius-showcase/e90ffea347393537703ae6f9d73e36492820f5a9/public/glb/modular_sci_fi_guns_pack/AR_6.glb",
+      "bytes": 105456,
+      "sha256": "0bb077776559d354b41834595c9c92ddd93318c1a893718ccf53e93f7e0a35ac",
+      "license": "CC0-1.0"
+    },
+    {
+      "name": "Grenade_3",
+      "target": "build/weapon-source/Grenade_3.glb",
+      "url": "https://raw.githubusercontent.com/trebeljahr/quaternius-showcase/e90ffea347393537703ae6f9d73e36492820f5a9/public/glb/modular_sci_fi_guns_pack/Grenade_3.glb",
+      "bytes": 96460,
+      "sha256": "6f4c4d2c4c27353a464d81b58a07d222ac7232aed298a6b8efc71022f92bf0f6",
+      "license": "CC0-1.0"
+    }
+  ]
+}
