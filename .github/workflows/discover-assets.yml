@@ -1,0 +1,19 @@
+name: Inspect official asset pack licenses
+on:
+  workflow_dispatch:
+  push:
+    paths: ['tools/discover_asset_packs.py', '.github/workflows/discover-assets.yml']
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 tools/discover_asset_packs.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ironfall-asset-source-evidence
+          path: build/asset-discovery
+          retention-days: 14
