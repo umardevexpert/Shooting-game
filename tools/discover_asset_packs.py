@@ -7,6 +7,7 @@ out = Path('build/asset-discovery')
 out.mkdir(parents=True, exist_ok=True)
 pages = {
     'human-characters': 'https://quaternius.itch.io/universal-base-characters',
+    'human-outfits': 'https://quaternius.itch.io/modular-character-outfits-fantasy',
     'human-animations': 'https://quaternius.itch.io/universal-animation-library',
     'human-download': 'https://quaternius.itch.io/universal-base-characters/purchase',
     'animation-download': 'https://quaternius.itch.io/universal-animation-library/purchase',
@@ -23,6 +24,7 @@ for name, url in pages.items():
 for name, url in {
     'gun-preview': 'https://quaternius.com/assets/images/fullres/animatedguns.jpg',
     'character-preview': 'https://quaternius.com/assets/images/fullres/universalbasecharacters/standard.jpg',
+    'modular-preview':'https://quaternius.com/assets/images/fullres/modularcharacters.jpg',
     'soldier-preview': 'https://quaternius.com/assets/images/fullres/ultimateanimatedcharacter.jpg',
 }.items():
     with urllib.request.urlopen(url, timeout=40) as response: (out / (name+'.jpg')).write_bytes(response.read())

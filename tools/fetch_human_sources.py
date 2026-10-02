@@ -16,10 +16,16 @@ for name, folder in [('animated-guns-fbx','155Ce5mXbboLYaAADOIBDl9N5EOf0zm8X'),(
     try:
         listing=gdown.download_folder(id=folder,output=str(out/name)+'/',skip_download=True,quiet=True)
         for item in listing or []:
-            if Path(item.path).name in ['AssaultRifle_1.fbx','AssaultRifle2_1.fbx','Pistol_1.fbx','Shotgun_1.fbx','SniperRifle_1.fbx','SubmachineGun_1.fbx','AssaultRifle.fbx','Pistol.fbx','Shotgun.fbx','SniperRifle.fbx','Bullpup.fbx','Revolver.fbx']:
+            if Path(item.path).name in ['AssaultRifle_1.fbx','AssaultRifle2_1.fbx','Pistol_1.fbx','Shotgun_1.fbx','SniperRifle_1.fbx','SubmachineGun_1.fbx','AssaultRifle.fbx','Pistol.fbx','Shotgun.fbx','SniperRifle.fbx','Bullpup.fbx','Revolver.fbx','Rifle.fbx','P90.fbx']:
                 target=out/'conventional-weapons'/Path(item.path).name
                 target.parent.mkdir(parents=True,exist_ok=True)
-                result=gdown.download(id=item.id,output=str(target),quiet=True)
+                direct='https://drive.usercontent.google.com/download?'+urllib.parse.urlencode({'id':item.id,'export':'download','confirm':'t'})
+                try:
+                    with urllib.request.urlopen(direct,timeout=60) as response: target.write_bytes(response.read())
+                    assert target.read_bytes()[:20].startswith(b'Kaydara FBX'), 'Not a public FBX download'
+                    result=str(target)
+                except Exception:
+                    result=gdown.download(id=item.id,output=str(target),quiet=True)
                 assert result and target.is_file(),item.path
                 print('GUN_DOWNLOADED',target.name,target.stat().st_size,hashlib.sha256(target.read_bytes()).hexdigest(),flush=True)
     except Exception as error:print('DRIVE_ERROR',name,str(error),flush=True)
@@ -52,6 +58,20 @@ for name in ['universal-base-characters','universal-animation-library']:
             shutil.copyfileobj(source,dest)
         print('FREE_ARCHIVE',name,archive.stat().st_size,hashlib.sha256(archive.read_bytes()).hexdigest(),flush=True)
         with zipfile.ZipFile(archive) as z:
+            for entry_name in z.namelist():
+                if 'license' in Path(entry_name).name.lower():
+                    (out/(name+'-'+Path(entry_name).name)).write_bytes(z.read(entry_name))
+            if name == 'universal-base-characters':
+                model_name=next(n for n in z.namelist() if n.endswith('/Godot - UE/Superhero_Male_FullBody.gltf'))
+                model=json.loads(z.read(model_name));parent=Path(model_name).parent
+                import posixpath
+                target_folder=out/'human-models';target_folder.mkdir(parents=True,exist_ok=True)
+                (target_folder/'Superhero_Male_FullBody.gltf').write_text(json.dumps(model))
+                for asset in model.get('buffers',[])+model.get('images',[]):
+                    if 'uri' not in asset:continue
+                    uri=asset['uri'];source_name=posixpath.normpath(str(parent/uri))
+                    target=target_folder/uri;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(z.read(source_name))
+                print('HUMAN_GLTF_EXTRACTED',flush=True)
             inventory=[{'path':info.filename,'bytes':info.file_size} for info in z.infolist() if not info.is_dir()]
             (out/(name+'-inventory.json')).write_text(json.dumps(inventory,indent=2))
             print('FREE_MODELS',name,[entry for entry in inventory if entry['path'].lower().endswith(('.glb','.gltf','.fbx','.txt'))],flush=True)
