@@ -152,12 +152,18 @@ func _touch_and_pause_tests() -> void:
 	touch(2, Vector2(1210, 566), false)
 	check(not controls.fire and controls.move_touch == 0, "Releasing fire preserves movement touch")
 	controls.clear()
-	game.pause_game()
+	var escape := InputEventKey.new()
+	escape.physical_keycode = KEY_ESCAPE
+	escape.keycode = KEY_ESCAPE
+	escape.pressed = true
+	get_viewport().push_input(escape)
+	check(game.state == game.State.PAUSED and game.ui.screen == "pause", "Escape pauses once across handled and unhandled input callbacks")
 	var elapsed: float = game.arena.elapsed
 	await frames(30)
 	check(game.arena.elapsed == elapsed and get_tree().paused, "Pause freezes combat and mission time")
 	check(not controls.fire and controls.move_touch == -1, "Pause clears held touch state")
-	game.resume_game()
+	get_viewport().push_input(escape)
+	check(game.state == game.State.PLAYING, "Escape resumes from the pause menu")
 	await frames(4)
 	check(game.arena.elapsed > elapsed and game.state == game.State.PLAYING, "Resume restores simulation")
 	game._notification(Node.NOTIFICATION_APPLICATION_PAUSED)

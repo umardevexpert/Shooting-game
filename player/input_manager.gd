@@ -56,7 +56,9 @@ func _input(event: InputEvent) -> void:
 			KEY_G: action_requested.emit("grenade")
 			KEY_C: aim = not aim
 			KEY_SPACE: action_requested.emit("dodge")
-			KEY_ESCAPE: action_requested.emit("pause")
+			KEY_ESCAPE:
+				action_requested.emit("pause")
+				get_viewport().set_input_as_handled()
 	queue_redraw()
 
 func _handle_touch(index: int, point: Vector2, pressed: bool) -> void:

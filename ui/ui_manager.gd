@@ -157,6 +157,7 @@ func _page(title: String, subtitle: String) -> VBoxContainer:
 	return body
 
 func show_screen(name: String) -> void:
+	if OS.is_debug_build(): print("IRONFALL_SCREEN " + name)
 	screen = name
 	controls.enabled = false
 	controls.queue_redraw()
@@ -184,6 +185,7 @@ func show_screen(name: String) -> void:
 	tween.tween_property(content, "modulate:a", 1.0, 0.18)
 
 func show_game(arena: CombatArena, attach_signals: bool = true) -> void:
+	if OS.is_debug_build(): print("IRONFALL_SCREEN game")
 	screen = "game"
 	content.visible = false
 	hud.visible = true
