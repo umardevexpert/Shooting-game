@@ -1,24 +1,28 @@
-"""Inspect established publishers for a realistic human/military art pipeline."""
+"""Inspect official CC0 human/military pack downloads, without purchasing assets."""
 import json
 from pathlib import Path
-import re
-import urllib.parse
 import urllib.request
 
-output = Path('build/asset-discovery')
-output.mkdir(parents=True, exist_ok=True)
-
-def inspect(name, url):
-    with urllib.request.urlopen(url, timeout=30) as response:
-        page = response.read().decode('utf-8')
-    (output / (name + '.html')).write_text(page)
-    links = [urllib.parse.urljoin(url, link) for link in re.findall(r'href=[\"\']([^\"\']+)[\"\']', page)]
-    relevant = [link for link in links if any(word in link.lower() for word in ['character', 'human', 'gun', 'military', 'soldier', 'animation', '.zip', 'drive.google', 'license', 'creativecommons'])]
-    print(json.dumps({'publisher': name, 'url': url, 'links': sorted(set(relevant)), 'cc0_mentioned': 'CC0' in page or 'publicdomain/zero' in page}), flush=True)
-    return links
-
-links = inspect('quaternius-index', 'https://quaternius.com/')
-pages = sorted(set(link for link in links if '/packs/' in link and any(word in link.lower() for word in ['character', 'gun', 'military', 'animation'])))
-for index, url in enumerate(pages[:20]):
-    try: inspect('pack-' + str(index), url)
-    except Exception as error: print(json.dumps({'url': url, 'error': str(error)}), flush=True)
+out = Path('build/asset-discovery')
+out.mkdir(parents=True, exist_ok=True)
+pages = {
+    'human-characters': 'https://quaternius.itch.io/universal-base-characters',
+    'human-animations': 'https://quaternius.itch.io/universal-animation-library',
+    'human-download': 'https://quaternius.itch.io/universal-base-characters/purchase',
+    'animation-download': 'https://quaternius.itch.io/universal-animation-library/purchase',
+    'conventional-guns': 'https://drive.google.com/drive/folders/12V-mHNB6bnW2WzgpJfRBQd-TG4pOO3yx?usp=sharing',
+    'animated-guns': 'https://drive.google.com/drive/folders/1ICYTdMXQqhkhrh8Fzjx9D0ozJuONwtC4?usp=sharing',
+    'animated-humans': 'https://drive.google.com/drive/folders/1sNi1AfenfPRrvRt5yfaj5QMMd6KKcUJ5?usp=sharing',
+}
+for name, url in pages.items():
+    try:
+        with urllib.request.urlopen(url, timeout=40) as response: page = response.read()
+        (out / (name + '.html')).write_bytes(page)
+        print(json.dumps({'name': name, 'url': url, 'bytes': len(page)}), flush=True)
+    except Exception as error: print(json.dumps({'url':url, 'error':str(error)}), flush=True)
+for name, url in {
+    'gun-preview': 'https://quaternius.com/assets/images/fullres/animatedguns.jpg',
+    'character-preview': 'https://quaternius.com/assets/images/fullres/universalbasecharacters/standard.jpg',
+    'soldier-preview': 'https://quaternius.com/assets/images/fullres/ultimateanimatedcharacter.jpg',
+}.items():
+    with urllib.request.urlopen(url, timeout=40) as response: (out / (name+'.jpg')).write_bytes(response.read())
