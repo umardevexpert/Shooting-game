@@ -31,5 +31,6 @@ it first. Use a persistent private signing key for repeatable release builds.
 The workflow has successfully exported and verified APKs. Its separate API 35
 emulator job exercises real touch navigation, mission launch, pause/resume,
 background/foreground events and save/relaunch, and uploads screenshots/logs as
-`ironfall-android-smoke`. Both jobs passed in run 37060846180. Physical-device
+`ironfall-android-smoke`. Both jobs passed for human build 0.2.1 in
+[run 37074024404](https://github.com/umardevexpert/Shooting-game/actions/runs/37074024404). Physical-device
 performance, human playtesting and final visual quality remain release checks.

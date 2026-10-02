@@ -14,7 +14,7 @@ An offline third-person tactical campaign for Android, built in Godot 4.6.3.
    waves, rescue/defense, graphics/audio/control settings and lifecycle handling.
    Gate: all mission playthroughs, aspect ratios and Android lifecycle checks.
 4. **Human military visual quality:** actual skinned humans, hand-held tactical
-   guns, correct physical muzzles and support-hand IK are integrated. Free CC0
+   guns, camera-aligned physical muzzles and both-hand IK are integrated. Free CC0
    low-poly assets establish gameplay presentation, not PUBG-level quality.
    Next: detailed licensed human/clothing/face art, dedicated rifle/shotgun reload
    and strafe clips, military/urban terrain sets and final lighting/UI polish.
@@ -39,7 +39,7 @@ An offline third-person tactical campaign for Android, built in Godot 4.6.3.
 
 ## Verification status
 
-- 94 game checks, zero failures; ten control-driven Easy campaign runs completed
+- 97 game checks, zero failures; ten control-driven Easy campaign runs completed
   and their rewards persisted. Eight Android tooling tests passed.
 - 56 asset manifest entries have complete provenance and matching checksums.
 - Updated human desktop PCK exports and launches without script/resource errors.

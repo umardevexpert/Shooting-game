@@ -16,8 +16,9 @@ no Mixamo assets are included. Original license text is in `assets/licenses`.
 
 `ActorVisual` adapts models and hand attachments without coupling controllers to
 source art. `HumanoidAnimator` blends locomotion, upper-body aiming and layered
-firing/reload/hit clips, with a full-body death clip. `ArmIK` aligns the left hand
-with the equipped firearm's support grip. Switching has an authored fallback.
+firing/reload/hit clips, with a full-body death clip. `ArmIK` places the right hand at the configured aiming grip and aligns the left
+hand with the firearm's support grip. A wrist correction points the actual
+barrel toward the camera aim target; shooting reads the same physical muzzle. Switching has an authored fallback.
 Directional variants and generic pistol-source reloads still need an animation
 polish pass and dedicated rifle/shotgun reloads.
 
@@ -29,6 +30,7 @@ are still required for the final art target. `prepare_firearms.py` and
 `prepare_modular_firearms.py` normalize meter scale, grip origin and +Z muzzle.
 `data/weapon_visuals.json` provides model, muzzle, shell and support-grip settings.
 The weapon is attached to the right hand; rays start at its physical barrel.
+The death clip continues behind a failure overlay while gameplay is paused.
 
 ## Provenance
 

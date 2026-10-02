@@ -2,16 +2,25 @@
 
 A native **Godot 4.6.3 third-person 3D shooter project** for landscape Android.
 Offline campaign, ten mission definitions, eight weapons, seven enemy
-archetypes, phased boss, objectives, loadouts, six upgrades per weapon, local
+archetypes including a phased boss, objectives, loadouts, six upgrades per weapon, local
 currency/XP/stars, saves, touchscreen input, settings and reusable combat systems.
 
-**Status:** playable development campaign (free low-poly human art, not PUBG-level graphics) with imported, licensed skinned 3D
-human soldiers, bone-attached tactical firearm models and modular PBR environment meshes.
-GitHub Actions exports and verifies the Android APK. The APK has passed an API 35
-emulator check covering real touch navigation, mission launch, pause/resume,
-background/foreground handling and save persistence across process restart.
-Physical-device performance and final artwork/animation quality remain release
-work. See [asset pipeline](docs/ASSET_PIPELINE.md) and [test report](docs/TEST_REPORT.md).
+**Status:** playable development campaign with actual skinned 3D human soldiers,
+bone-attached guns, arm IK, camera-aligned barrels and modular PBR environment
+meshes. The free character/gun art is low-poly/stylized; it does **not** yet match
+PUBG's visual quality. Detailed military art, dedicated weapon reloads, physical
+phone performance measurements and human balancing remain release work.
+
+**[Download tested Android APK 0.2.1](https://github.com/umardevexpert/Shooting-game/actions/runs/37074024404/artifacts/11255083175)**
+— unzip the artifact and install `ironfall-debug.apk` on Android 8.0+.
+[Build and emulator checks](https://github.com/umardevexpert/Shooting-game/actions/runs/37074024404)
+both passed, alongside **97 game checks and all ten campaign playthroughs**.
+Android touch navigation, ADS/fire/reload, pause/resume, background/foreground
+handling and save restoration after process restart were verified.
+See [asset pipeline](docs/ASSET_PIPELINE.md) and [test report](docs/TEST_REPORT.md).
+
+![Actual Android human-character gameplay](docs/screenshots/android-aim.png)
+
 
 ## Play on desktop
 
@@ -30,13 +39,13 @@ Select **Play Campaign → Training Ground → Deploy**.
 | Aim | ADS toggle | C |
 | Reload / switch | R / SW | R / Q |
 | Interact | USE near objective | E |
-| Grenade / dodge | G / ROLL | G / Space |
+| Grenade / dodge | G / DODGE | G / Space |
 | Sprint | RUN with movement | Shift |
 | Pause | II | Escape |
 
 Controls mirror in left-handed mode. Independent touch IDs let players move,
 look and shoot together. ADS reduces camera sensitivity and weapon spread.
-Roll reduces received damage briefly; cover blocks both sides' shots.
+Dodge reduces received damage briefly; cover blocks both sides' shots.
 Use objective rings and on-screen prompts. Escape rings finish missions.
 
 ## Build for Android
