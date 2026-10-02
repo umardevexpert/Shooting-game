@@ -29,8 +29,16 @@ jobs:
         with:
           name: ironfall-environment-source
           path: |
-            assets/vendor/godot_tps/level
+            assets/vendor/godot_tps/level/geometry/models
             build/visual-inventory.json
+            assets/licenses/Godot-TPS-LICENSE.md
+          if-no-files-found: error
+          retention-days: 14
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ironfall-environment-textures
+          path: |
+            assets/vendor/godot_tps/level/textures
             assets/licenses/Godot-TPS-LICENSE.md
           if-no-files-found: error
           retention-days: 14

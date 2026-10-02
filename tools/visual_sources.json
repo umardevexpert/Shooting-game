@@ -43,19 +43,79 @@
       "size": 29053360
     },
     {
-      "path": "level/textures/props/container1_albedo.png",
-      "blob_sha": "ae3d58df81a7bf2a9ad289218f5b684bc2b2ca91",
-      "size": 466199
+      "path": "level/textures/props/container2_albedo.png",
+      "blob_sha": "aeb738973872984c475306c85c68ca2c32b95ccf",
+      "size": 462312
     },
     {
-      "path": "level/textures/props/container1_normal.png",
-      "blob_sha": "2f28384e13e9b124585914878a684e5be5756067",
-      "size": 717666
+      "path": "level/textures/props/container2_normal.png",
+      "blob_sha": "4d1810c20f75a839f9f9dfe35b77c7829320d2e2",
+      "size": 745654
     },
     {
-      "path": "level/textures/props/container1_orm.png",
-      "blob_sha": "ddc18d67029ee7e6f0790bfff3490d29c605240f",
-      "size": 1329784
+      "path": "level/textures/props/container2_orm.png",
+      "blob_sha": "2f81045e859de45bed4243d6dbb07141b0f5a86b",
+      "size": 1275848
+    },
+    {
+      "path": "level/textures/props/mid_cargo_box_albedo.png",
+      "blob_sha": "52c1f088a357a2bf6005f975372904ae6c1361d7",
+      "size": 2383427
+    },
+    {
+      "path": "level/textures/props/mid_cargo_box_normal.png",
+      "blob_sha": "a7451cef8fa88c43b80567949437346fed5725c4",
+      "size": 2115625
+    },
+    {
+      "path": "level/textures/props/mid_cargo_box_orm.png",
+      "blob_sha": "e09a8c6df9098c10bd3cde8821cf1d0b3b6d57de",
+      "size": 4203392
+    },
+    {
+      "path": "level/textures/structure/floor_grate_wholes_albedo.png",
+      "blob_sha": "fb032379bcdd8fc43637423baca49ee03d729fe1",
+      "size": 313327
+    },
+    {
+      "path": "level/textures/structure/floor_grate_wholes_normal.png",
+      "blob_sha": "aa62930176a6a5920c6411323979ece9e51e657a",
+      "size": 457241
+    },
+    {
+      "path": "level/textures/structure/floor_grate_wholes_orm.png",
+      "blob_sha": "2351aae776e197d8439ebb1887b7d5c1e15b8908",
+      "size": 786814
+    },
+    {
+      "path": "level/textures/structure/tile_default_metal_albedo.png",
+      "blob_sha": "5db375c7efd59c3ae3af33677d305d2eda0de2a9",
+      "size": 71420
+    },
+    {
+      "path": "level/textures/structure/tile_default_metal_normal.png",
+      "blob_sha": "3a5a417dbc9a354cc431a8516ac61b30f16d62e2",
+      "size": 357405
+    },
+    {
+      "path": "level/textures/structure/tile_default_metal_orm.png",
+      "blob_sha": "29578ac70a4565e15a4e98856a4b6f96504413c2",
+      "size": 687848
+    },
+    {
+      "path": "level/textures/structure/tile_painted_gun_metal_albedo.png",
+      "blob_sha": "ec6480ecc587db79326dbebd848c11849142c978",
+      "size": 202618
+    },
+    {
+      "path": "level/textures/structure/tile_painted_gun_metal_normal.png",
+      "blob_sha": "8292ad9a2a62249e216aa137c6e10d0d4439c099",
+      "size": 417201
+    },
+    {
+      "path": "level/textures/structure/tile_painted_gun_metal_orm.png",
+      "blob_sha": "87bcc0455bf2eea00eb24f68563d5a9bc690064d",
+      "size": 681603
     }
   ]
 }
