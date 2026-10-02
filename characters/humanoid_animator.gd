@@ -18,11 +18,11 @@ func setup(model: Node3D) -> void:
 	skeleton.force_update_all_bone_transforms()
 	var library := AnimationLibrary.new()
 	for name in ["fire", "reload", "switch", "death"]:
-		library.add_animation(name, _authored_clip(name))
+		library.add_animation(name, player.get_animation(name + "_source").duplicate() if player.has_animation(name + "_source") else _authored_clip(name))
 	player.add_animation_library("combat", library)
 	for name in ["idle", "combat_idle", "walk", "run", "aim_run", "aim_forward", "aim_backward", "aim_left", "aim_right"]:
 		player.get_animation(name).loop_mode = Animation.LOOP_LINEAR
-	player.stop()
+	player.stop(true)
 	tree = AnimationTree.new()
 	model.add_child(tree)
 	tree.anim_player = tree.get_path_to(player)
@@ -102,7 +102,7 @@ func _authored_clip(name: String) -> Animation:
 	var bones: Array = ["upper_arm.R", "forearm.R"] if name == "fire" else ["upper_arm.L", "forearm.L", "hand.L", "upper_arm.R"] if name in ["reload", "switch"] else ["root", "hips", "thigh.L", "thigh.R", "upper_arm.L", "upper_arm.R"]
 	for bone in bones:
 		var track := result.add_track(Animation.TYPE_ROTATION_3D)
-		result.track_set_path(track, NodePath("Robot_Skeleton/Skeleton3D:" + bone))
+		result.track_set_path(track, NodePath(str(player.get_path_to(skeleton)).trim_prefix("../") + ":" + bone))
 		var base := _base_rotation(bone)
 		var angle := 0.10 if name == "fire" else 0.7 if bone == "upper_arm.L" else -0.9 if bone == "forearm.L" else 0.28
 		if name == "death": angle = 1.5 if bone == "root" else -0.45
@@ -113,7 +113,7 @@ func _authored_clip(name: String) -> Animation:
 	if name == "death":
 		var root_index := skeleton.find_bone("root")
 		var track := result.add_track(Animation.TYPE_POSITION_3D)
-		result.track_set_path(track, NodePath("Robot_Skeleton/Skeleton3D:root"))
+		result.track_set_path(track, NodePath(str(player.get_path_to(skeleton)).trim_prefix("../") + ":root"))
 		result.position_track_insert_key(track, 0, skeleton.get_bone_rest(root_index).origin)
 		result.position_track_insert_key(track, result.length * 0.7, Vector3(1.2, 0.38, 0))
 		result.position_track_insert_key(track, result.length, Vector3(1.2, 0.38, 0))

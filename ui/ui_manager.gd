@@ -89,7 +89,8 @@ func _safe_area() -> void:
 
 func _clear() -> void:
 	for child in content.get_children():
-		content.remove_child(child)
+		if child is CanvasItem: child.hide()
+		child.process_mode = Node.PROCESS_MODE_DISABLED
 		child.queue_free()
 
 func _label(parent: Node, text: String, font_size: int = 17, color: Color = TEXT) -> Label:
@@ -401,7 +402,7 @@ func _results(victory: bool) -> void:
 
 func _about() -> void:
 	var body := _page("IRONFALL", "OPERATION BLACKOUT  /  DEVELOPMENT CAMPAIGN")
-	_label(body, "IRONFALL / OPERATION BLACKOUT\n\n3D character, source animations, environment meshes and PBR textures:\n© 2018 Juan Linietsky and Fernando Miguel Calabró.\nGodot TPS Demo • Creative Commons Attribution 3.0.\nModified for Ironfall. github.com/godotengine/tps-demo\ncreativecommons.org/licenses/by/3.0/\n\nStarting weapon models / texture atlas: Kenney • CC0.\nAdditional combat animations, audio and icon: original Ironfall assets.\nFonts: DejaVu Sans (assets/FONT_LICENSE.txt).\nEngine: Godot 4.6.3 • MIT.\n\nOffline campaign • No account, ads or in-app purchases.\nSee assets/manifest.json for sources and modifications.", 16, MUTED).autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_label(body, "IRONFALL / OPERATION BLACKOUT\n\nEnvironment meshes and PBR textures:\n© 2018 Juan Linietsky and Fernando Miguel Calabró.\nGodot TPS Demo • Creative Commons Attribution 3.0.\nModified for Ironfall. github.com/godotengine/tps-demo\ncreativecommons.org/licenses/by/3.0/\n\nRigged humans, animation source and tactical weapons: Quaternius • CC0.\nEffects meshes: Kenney • CC0.\nSwitching animation, audio and icon: original Ironfall assets.\nFonts: DejaVu Sans (assets/FONT_LICENSE.txt).\nEngine: Godot 4.6.3 • MIT.\n\nOffline campaign • No account, ads or in-app purchases.\nSee assets/manifest.json for sources and modifications.", 16, MUTED).autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 
 func go_back() -> void:
 	if screen == "data_error":

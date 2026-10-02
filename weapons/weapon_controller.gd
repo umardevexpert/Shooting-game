@@ -77,7 +77,7 @@ func shoot(aiming: bool) -> void:
 					Audio.play("hit")
 				world.effects.impact(endpoint, hit.normal)
 			world.effects.tracer(origin, endpoint, Color("ffd58a"))
-	world.effects.flash(origin)
+	world.effects.flash(origin, direction)
 	camera_rig.kick(float(data.recoil))
 	player.visual.shot = 1.0
 	Audio.play("shot", "Weapon", rng.randf_range(0.9, 1.1))

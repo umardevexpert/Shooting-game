@@ -1,55 +1,60 @@
 # Licensed 3D presentation pipeline
 
-The campaign renders in a real-time 3D world with an imported skinned humanoid
-robot, bone-attached weapons, modular industrial meshes and shared PBR materials.
-`assets/manifest.json` records every external runtime asset, its source revision,
-license, attribution requirements, modifications and output checksum.
+The current playable character and enemies are **clothed, rigged 3D humans** from
+Quaternius Ultimate Modular Characters (CC0). A separate civilian is used in the
+rescue mission. These are genuine imported skinned meshes, not capsules or sprites.
+The SWAT model has 49 weighted humanoid joints and about 7,753 triangles.
+They are low-poly development artwork; they do not match PUBG's visual fidelity.
 
-## Character integration
+## Human animation and attachments
 
-`ActorVisual` owns presentation; controllers and enemy AI own gameplay.
-`HumanoidAnimator` blends idle/walk/run and directional aim locomotion, applies
-filtered upper-body pitch and layers skeletal fire/reload/switch/hit clips.
-Death uses a separate skeletal clip. `BoneAttachment3D` connects the equipped
-`WeaponVisual` to the right hand. Each weapon exposes muzzle/ejection markers.
-Player and enemy rays originate at the muzzle; cover still blocks the shot.
+`tools/prepare_tactical_models.py` normalizes the source's centimeter rig and
+corrects metallic skin/clothing materials. `tools/retarget_humanoids.py` bakes
+18 licensed Universal Animation Library Standard clips onto the human rig at
+30 Hz, plus four derived directional variants. The original archive is CC0;
+no Mixamo assets are included. Original license text is in `assets/licenses`.
 
-The original Godot TPS robot is CC-BY 3.0, has 19,516 source triangles and a
-145-joint rig. `tools/prepare_character.py` retains 106 needed joints and 15
-clips, removes translation root motion, reduces redundant keys and produces
-the 3.7 MB runtime GLB. The supplied jump clip is available for later gameplay.
-Reload, fire, switch and death clips are additional Ironfall skeletal animations.
-These clips need a visual animation polish pass; they are not Mixamo imports.
+`ActorVisual` adapts models and hand attachments without coupling controllers to
+source art. `HumanoidAnimator` blends locomotion, upper-body aiming and layered
+firing/reload/hit clips, with a full-body death clip. `ArmIK` aligns the left hand
+with the equipped firearm's support grip. Switching has an authored fallback.
+Directional variants and generic pistol-source reloads still need an animation
+polish pass and dedicated rifle/shotgun reloads.
 
-## Environment integration
+All eight categories use distinct imported firearm models. Pistol/P90/shotgun/
+sniper come from Quaternius Animated Guns. Rifle/burst/heavy/launcher use muted,
+recolored Modular Sci-Fi Guns models. These have proper gun geometry and PBR
+material factors, but remain stylized; detailed conventional military assets
+are still required for the final art target. `prepare_firearms.py` and
+`prepare_modular_firearms.py` normalize meter scale, grip origin and +Z muzzle.
+`data/weapon_visuals.json` provides model, muzzle, shell and support-grip settings.
+The weapon is attached to the right hand; rays start at its physical barrel.
 
-`MissionEnvironment` places imported modules within the mission's authored cover
-footprints. The same footprints drive navigation and simple collision volumes.
-`MaterialLibrary` shares source albedo/normal/ORM maps. Metallic and roughness
-use the source ORM channels. Textures are limited to 1024 pixels, mipmapped and
-compressed for Android. Godot mesh imports generate LODs and shadow meshes.
+## Provenance
 
-`tools/prepare_environment.py` extracts named meshes with Blender and moves their
-origins to the grounded center. Runtime GLBs are committed; the large source art
-cache is excluded from exports and Git. `tools/visual_sources.json` pins source
-revisions, sizes and Git blob hashes. The visual-assets workflow downloads only
-those files and verifies them before preparation.
+Publisher CC0 license pages are verified; the older GLBs/FBXs were obtained from
+pinned public mirrors because the publisher's Google Drive download failed.
+The manifest records original publisher, exact mirror revision, source SHA-256,
+modified output SHA-256, purpose, date, license and modification details.
+The free Standard animation archive is downloaded directly from the publisher's
+Itch page; paid Pro files were not downloaded. Retired robot/blaster models are
+identified as development assets and are no longer used for playable characters
+or equipped guns.
 
-## Replace or extend art
+## Environments and mobile settings
 
-Import a licensed GLB, record it in the manifest, map its skeleton/animation names
-in the presentation layer and adjust the hand grip/muzzle transforms. Gameplay
-controllers do not depend on source mesh or bone names. For another environment
-module, add its PackedScene to the module catalog and retain a matching collision
-footprint. Paid/proprietary source packs require their own license review before
-redistribution; this repository contains only the listed redistributable assets.
+Designed mission layouts use imported modular industrial props, walls, floors,
+lights and fences from the official Godot TPS Demo, CC-BY 3.0. Shared albedo,
+normal and ORM maps are limited to 1024 pixels, compressed and mipmapped for
+Android. Blender preparation normalizes origins and alignment. Godot mesh imports
+generate LODs and shadow meshes. Simple invisible collision/nav footprints are
+separate from visual meshes. Low/Medium/High settings scale shadows and effects.
+Biome-specific military buildings, terrain and vegetation remain art work.
 
-## Remaining visual requirements
-
-All eight weapons have distinct CC0 meshes, including a scoped sniper and
-rotary machine gun. The official Blaster Kit 2.1 supplies the additional weapons
-and grenade/projectile meshes; its archive checksum is recorded in the manifest.
-`data/weapon_visuals.json` configures scale, grip, orientation and barrel markers.
-The current art direction is a stylized industrial robot shooter; human soldier models and
-distinct biome/building packs have not been imported. Rendered animation quality,
-hand contact, LOD behavior and real-device GPU performance remain release checks.
+`assets/manifest.json` is the runtime inventory; run
+`python3 tools/verify_asset_manifest.py` before exporting. Large source archives,
+Blender intermediates and generated renders remain under ignored `build/`.
+Future assets must be licensed for distribution and adapted through the same
+presentation layer. Paid packs must not be committed where redistribution is
+prohibited. GPU frame time, LOD transitions and thermals require physical-device
+measurement; no 60 FPS claim is made from headless or emulator tests.

@@ -1,10 +1,8 @@
 class_name ActorVisual
 extends Node3D
 
-const OPERATOR := preload("res://assets/models/operator.glb")
-const ALBEDO := preload("res://assets/textures/player_robot_albedo.png")
-const NORMAL := preload("res://assets/textures/player_robot_normal.png")
-const ORM := preload("res://assets/textures/player_robot_orm.png")
+const OPERATOR := preload("res://assets/models/swat_operator.glb")
+const CIVILIAN := preload("res://assets/models/casual_operator.glb")
 var model: Node3D
 var skeleton: Skeleton3D
 var animator: HumanoidAnimator
@@ -15,34 +13,20 @@ var motion := "idle"
 var aim_pitch := 0.0
 var local_movement := Vector3.ZERO
 
-func build(color: Color, heavy: bool = false) -> void:
-	model = OPERATOR.instantiate()
+func build(color: Color, heavy: bool = false, civilian: bool = false) -> void:
+	model = (CIVILIAN if civilian else OPERATOR).instantiate()
 	add_child(model)
 	model.rotation.y = PI
-	model.scale = Vector3.ONE * 1.15
 	skeleton = model.find_child("Skeleton3D", true, false)
-	var body := StandardMaterial3D.new()
-	body.albedo_texture = ALBEDO
-	body.albedo_color = color.lightened(0.3)
-	body.normal_enabled = true
-	body.normal_texture = NORMAL
-	body.roughness_texture = ORM
-	body.roughness_texture_channel = BaseMaterial3D.TEXTURE_CHANNEL_GREEN
-	body.metallic_texture = ORM
-	body.metallic_texture_channel = BaseMaterial3D.TEXTURE_CHANNEL_BLUE
-	body.metallic = 1
-	body.ao_enabled = true
-	body.ao_texture = ORM
-	var emission := StandardMaterial3D.new()
-	emission.albedo_color = color.lightened(0.5)
-	emission.emission_enabled = true
-	emission.emission = Color("82c3d3")
 	for child in skeleton.get_children():
 		if child is MeshInstance3D:
 			for index in range(child.mesh.get_surface_count()):
-				var original: Material = child.mesh.surface_get_material(index)
-				child.set_surface_override_material(index, emission if original.resource_name == "robotemitter" else body)
-			if "Cannons" in child.name: child.visible = false
+				var original: StandardMaterial3D = child.mesh.surface_get_material(index)
+				if original == null: continue
+				var material: StandardMaterial3D = original.duplicate()
+				if "Swat" in material.resource_name:
+					material.albedo_color *= color.lightened(0.55)
+				child.set_surface_override_material(index, material)
 	animator = HumanoidAnimator.new()
 	add_child(animator)
 	animator.setup(model)
@@ -54,7 +38,8 @@ func build(color: Color, heavy: bool = false) -> void:
 	weapon = WeaponVisual.new()
 	socket.add_child(weapon)
 	weapon.basis = reference.inverse().orthonormalized()
-	if heavy: scale *= 1.25
+	if heavy: scale *= 1.12
+	if civilian: weapon.hide()
 
 func equip_weapon(id: String) -> void:
 	weapon.equip(id)
@@ -69,5 +54,7 @@ func animate(delta: float, speed: float, aiming: bool, reloading: bool, dead: bo
 	animator.update(delta, speed, aiming, aim_pitch, reloading, shot, hurt, dead)
 	if shot > 0.9: weapon.kick()
 	weapon.update(delta)
+	if aiming and not reloading and not dead and hurt <= 0 and weapon.visible:
+		ArmIK.reach(skeleton, "L", weapon.support_grip.global_position)
 	hurt = move_toward(hurt, 0, delta * 5)
 	shot = move_toward(shot, 0, delta * 8)

@@ -7,15 +7,23 @@ const MAX_EFFECTS := 96
 const MAX_PROJECTILES := 24
 var effects: Array[Dictionary] = []
 var projectiles: Array[Dictionary] = []
+var meshes: Dictionary
 var cursor := 0
 var world: Node3D
 
 func _ready() -> void:
+	meshes = EffectMeshes.build()
 	for i in range(MAX_EFFECTS):
-		var mesh := Geometry.box(self, Vector3.ONE, Vector3.ZERO, Color("f9b865"))
+		var mesh := MeshInstance3D.new()
+		add_child(mesh)
+		var material := StandardMaterial3D.new()
+		material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		material.cull_mode = BaseMaterial3D.CULL_DISABLED
+		material.roughness = 0.9
+		mesh.material_override = material
 		mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 		mesh.visible = false
-		effects.append({"mesh": mesh, "life": 0.0, "total": 1.0, "kind": "", "base": Vector3.ONE})
+		effects.append({"mesh": mesh, "material": material, "life": 0.0, "total": 1.0, "kind": "", "base": Vector3.ONE})
 	for i in range(MAX_PROJECTILES):
 		var mesh := Node3D.new()
 		add_child(mesh)
@@ -37,7 +45,12 @@ func _effect(position_value: Vector3, scale_value: Vector3, duration: float, col
 	mesh.global_position = position_value
 	mesh.rotation = Vector3.ZERO
 	mesh.scale = scale_value
-	mesh.material_override = Geometry.material(color, kind != "decal")
+	mesh.mesh = meshes[kind]
+	var material: StandardMaterial3D = effect.material
+	material.albedo_color = color
+	material.emission_enabled = kind not in ["decal", "smoke"]
+	material.emission = color
+	material.emission_energy_multiplier = 1.8
 	effect.life = duration
 	effect.total = duration
 	effect.kind = kind
@@ -49,8 +62,9 @@ func tracer(start: Vector3, end: Vector3, color: Color) -> void:
 	var mesh := _effect((start + end) * 0.5, Vector3(0.015, 0.015, start.distance_to(end)), 0.06, color, "tracer")
 	mesh.look_at(end, Vector3.UP if absf((end - start).normalized().y) < 0.98 else Vector3.RIGHT)
 
-func flash(position_value: Vector3) -> void:
-	_effect(position_value, Vector3.ONE * 0.22, 0.055, Color("ffe4a3"), "flash")
+func flash(position_value: Vector3, direction: Vector3 = Vector3.FORWARD) -> void:
+	var mesh := _effect(position_value, Vector3(0.2, 0.2, 0.4), 0.055, Color("ffe4a3"), "flash")
+	mesh.look_at(position_value + direction, Vector3.RIGHT if absf(direction.y) > 0.98 else Vector3.UP)
 
 func impact(position_value: Vector3, normal: Vector3) -> void:
 	_effect(position_value + normal * 0.03, Vector3.ONE * 0.1, 0.15, Color("ebc993"), "spark")
@@ -86,7 +100,9 @@ func _physics_process(delta: float) -> void:
 		if item.life <= 0: continue
 		item.life -= delta
 		if item.life <= 0: item.mesh.visible = false
-		elif item.kind in ["explosion", "smoke"]:
+		else:
+			item.material.albedo_color.a = clampf(item.life / (item.total * 0.4), 0, 1)
+		if item.life > 0 and item.kind in ["explosion", "smoke"]:
 			item.mesh.scale = item.base * (1.0 + (1.0 - item.life / item.total) * 5)
 			if item.kind == "smoke": item.mesh.position.y += delta * 0.6
 	for item in projectiles:

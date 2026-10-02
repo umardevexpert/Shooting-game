@@ -180,10 +180,16 @@ func _touch_and_pause_tests() -> void:
 
 func _asset_tests() -> void:
 	var visual: ActorVisual = game.arena.player.visual
-	check(visual.skeleton.get_bone_count() == 106 and visual.skeleton.find_bone("hand.R") >= 0, "Imported humanoid retains weighted skeleton and hand attachment bone")
-	var body: MeshInstance3D = visual.model.find_child("Robot_Body", true, false)
+	check(visual.skeleton.get_bone_count() >= 49 and visual.skeleton.find_bone("hand.R") >= 0, "Imported humanoid retains weighted skeleton and hand attachment bone")
+	var body: MeshInstance3D = visual.model.find_child("Swat_Body", true, false)
 	check(body.mesh is ArrayMesh and body.skin != null, "Player renders an imported skinned mesh")
-	check(visual.animator.tree.active and visual.animator.player.has_animation("combat/reload") and visual.animator.player.has_animation("combat/death"), "Animation blend graph includes authored reload and death clips")
+	check(visual.animator.tree.active and visual.animator.player.has_animation("combat/reload") and visual.animator.player.has_animation("combat/death"), "Animation blend graph includes retargeted reload and death clips")
+	check(visual.animator.player.has_animation("reload_source") and visual.animator.player.has_animation("death_source"), "Human rig contains licensed retargeted combat clips")
+	visual.equip_weapon("rifle")
+	visual.animate(0.1, 0, true, false, false)
+	var left := visual.skeleton.find_bone("hand.L")
+	var hand_position: Vector3 = visual.skeleton.global_transform * visual.skeleton.get_bone_global_pose(left).origin
+	check(hand_position.distance_to(visual.weapon.support_grip.global_position) < 0.08, "Left-hand IK reaches the firearm support grip")
 	check(visual.weapon.get_parent() is BoneAttachment3D and visual.weapon.get_parent().bone_name == "hand.R", "Weapon remains attached to the animated hand bone")
 	check(game.arena.player.weapons.muzzle_origin().distance_to(visual.weapon.muzzle.global_position) < 0.03, "Clear muzzle ray starts at actual model muzzle socket")
 	check(MaterialLibrary.get_material("container2").normal_texture != null and MaterialLibrary.get_material("mid_cargo_box").albedo_texture != null, "Imported environment materials load albedo and normal maps")

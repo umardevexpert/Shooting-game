@@ -22,7 +22,7 @@ func _ready() -> void:
 	add_child(collision)
 	visual = ActorVisual.new()
 	add_child(visual)
-	visual.build(Color("75b5ac"))
+	visual.build(Color("75b5ac"), false, true)
 	health.died.connect(func(): died.emit())
 
 func _physics_process(delta: float) -> void:

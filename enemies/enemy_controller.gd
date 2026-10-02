@@ -51,7 +51,7 @@ func _ready() -> void:
 	visual.build(Color(config.color), kind == "heavy")
 	visual.equip_weapon(config.get("weapon", "rifle"))
 	if kind == "boss":
-		visual.scale *= 1.8
+		visual.scale *= 1.2
 		boss_ring = Geometry.ring(world, float(Catalog.player.grenade_radius), Vector3.ZERO, Color("df785d"))
 		boss_ring.visible = false
 	decision_timer = rng.randf_range(0, 0.2)
@@ -172,7 +172,7 @@ func _shoot() -> void:
 		if hit.collider == target:
 			target.take_damage(float(config.damage) * float(world.difficulty.damage), global_position)
 	world.effects.tracer(origin, endpoint, Color("e08c64"))
-	world.effects.flash(origin)
+	world.effects.flash(origin, (endpoint - origin).normalized())
 	visual.shot = 1
 	if global_position.distance_to(target.global_position) < 22: Audio.play("shot", "Weapon", 0.75)
 

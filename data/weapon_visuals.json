@@ -1,122 +1,162 @@
 {
   "pistol": {
-    "model": "res://assets/vendor/kenney_fps/models/blaster.glb",
-    "scale": 0.34,
-    "offset": [
-      0,
-      -0.2,
-      0.4
-    ],
-    "muzzle": [
-      0,
-      0.36,
-      1.3
-    ],
-    "rotation": 0
-  },
-  "rifle": {
-    "model": "res://assets/vendor/kenney_fps/models/blaster-repeater.glb",
-    "scale": 0.44,
-    "offset": [
-      0,
-      -0.2,
-      0.4
-    ],
-    "muzzle": [
-      0,
-      0.36,
-      1.58
-    ],
-    "rotation": 0
-  },
-  "smg": {
-    "model": "res://assets/vendor/kenney_blaster_kit/models/blaster-d.glb",
-    "scale": 0.85,
-    "offset": [
-      0,
-      0.12,
-      0.05
-    ],
-    "muzzle": [
-      0,
-      0.17665,
-      0.509
-    ],
-    "rotation": 180
-  },
-  "shotgun": {
-    "model": "res://assets/vendor/kenney_blaster_kit/models/blaster-g.glb",
-    "scale": 0.95,
-    "offset": [
-      0,
-      0.12,
-      0.05
-    ],
-    "muzzle": [
-      0,
-      0.23395,
-      0.4031
-    ],
-    "rotation": 180
-  },
-  "sniper": {
-    "model": "res://assets/vendor/kenney_blaster_kit/models/blaster-f.glb",
-    "scale": 0.85,
-    "offset": [
-      0,
-      0.12,
-      0.05
-    ],
-    "muzzle": [
-      0,
-      0.2025,
-      0.7100000000000001
-    ],
-    "rotation": 180
-  },
-  "burst": {
-    "model": "res://assets/vendor/kenney_blaster_kit/models/blaster-q.glb",
+    "model": "res://assets/models/weapons/pistol.glb",
     "scale": 1,
     "offset": [
       0,
-      0.12,
-      0.05
+      0,
+      0.03
     ],
     "muzzle": [
       0,
-      0.141,
-      0.4102
+      0.09095614081298983,
+      0.24159999735510507
     ],
-    "rotation": 180
+    "rotation": 0,
+    "support_grip": [
+      0,
+      -0.01,
+      0.0405
+    ]
+  },
+  "rifle": {
+    "model": "res://assets/models/weapons/rifle.glb",
+    "scale": 1,
+    "offset": [
+      0,
+      0,
+      0.03
+    ],
+    "muzzle": [
+      0,
+      0.12765235730029387,
+      0.4834000010376752
+    ],
+    "rotation": 0,
+    "support_grip": [
+      -0.03,
+      -0.02,
+      0.11699999999999999
+    ]
+  },
+  "smg": {
+    "model": "res://assets/models/weapons/smg.glb",
+    "scale": 1,
+    "offset": [
+      0,
+      0,
+      0.03
+    ],
+    "muzzle": [
+      0,
+      0.028129716753028333,
+      0.34300000025814015
+    ],
+    "rotation": 0,
+    "support_grip": [
+      0,
+      -0.01,
+      0.09
+    ]
+  },
+  "shotgun": {
+    "model": "res://assets/models/weapons/shotgun.glb",
+    "scale": 1,
+    "offset": [
+      0,
+      0,
+      0.03
+    ],
+    "muzzle": [
+      0,
+      0.09478244985695239,
+      0.6565999969164087
+    ],
+    "rotation": 0,
+    "support_grip": [
+      0,
+      -0.01,
+      0.138
+    ]
+  },
+  "sniper": {
+    "model": "res://assets/models/weapons/sniper.glb",
+    "scale": 1,
+    "offset": [
+      0,
+      0,
+      0.03
+    ],
+    "muzzle": [
+      0,
+      0.044828130165115,
+      0.7005999994738228
+    ],
+    "rotation": 0,
+    "support_grip": [
+      0,
+      -0.01,
+      0.162
+    ]
+  },
+  "burst": {
+    "model": "res://assets/models/weapons/burst.glb",
+    "scale": 1,
+    "offset": [
+      0,
+      0,
+      0.03
+    ],
+    "muzzle": [
+      0,
+      0.12195045794187873,
+      0.5710000014181363
+    ],
+    "rotation": 0,
+    "support_grip": [
+      -0.03,
+      -0.02,
+      0.135
+    ]
   },
   "heavy": {
-    "model": "res://assets/vendor/kenney_blaster_kit/models/blaster-p.glb",
-    "scale": 1.1,
+    "model": "res://assets/models/weapons/heavy.glb",
+    "scale": 1,
     "offset": [
       0,
-      0.12,
-      0.05
+      0,
+      0.03
     ],
     "muzzle": [
       0,
-      0.15177,
-      0.48603999999999997
+      0.1794605776667595,
+      0.6342000056206584
     ],
-    "rotation": 180
+    "rotation": 0,
+    "support_grip": [
+      -0.03,
+      -0.02,
+      0.156
+    ]
   },
   "launcher": {
-    "model": "res://assets/vendor/kenney_blaster_kit/models/blaster-h.glb",
-    "scale": 1.15,
+    "model": "res://assets/models/weapons/launcher.glb",
+    "scale": 1,
     "offset": [
       0,
-      0.12,
-      0.05
+      0,
+      0.03
     ],
     "muzzle": [
       0,
-      0.22175,
-      0.379
+      0.14291512612253426,
+      0.4792000058523921
     ],
-    "rotation": 180
+    "rotation": 0,
+    "support_grip": [
+      -0.03,
+      -0.02,
+      0.12449999999999999
+    ]
   }
 }

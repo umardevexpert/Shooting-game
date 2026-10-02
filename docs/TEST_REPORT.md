@@ -44,11 +44,17 @@ randomized, so individual run times vary.
 
 ## Android verification
 
-GitHub Actions run [37060846180](https://github.com/umardevexpert/Shooting-game/actions/runs/37060846180)
+GitHub Actions run [37064880204](https://github.com/umardevexpert/Shooting-game/actions/runs/37064880204)
 passed APK export/signature/package/ABI checks and API 35 x86_64 Android emulator
-launch, touchscreen menu navigation, mission entry, pause/resume,
+launch, touchscreen menu navigation, mission entry, ADS/fire/reload, pause/resume,
 Home/foreground lifecycle, local save and process restart checks.
-That run predates the imported 3D art; the next run verifies the updated APK.
+This APK contains the imported skinned robot, eight distinct weapons and modular
+PBR scenery. The firing screenshot was visually inspected and shows the actual
+3D world and character. The initial gameplay screenshot still shows the previous
+loadout frame because software rendering lags scene creation; inspect `04-fired.png`.
+Two nonfatal engine `can_process` errors appear during menu transitions and need
+correction. No script/resource crash occurred; the whole smoke check passed.
+The robot/blaster art does not meet the newly requested human military direction.
 
 ## Licensed asset validation
 

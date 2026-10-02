@@ -1,0 +1,18 @@
+Quaternius assets — CC0 1.0 Universal (Public Domain Dedication)
+https://creativecommons.org/publicdomain/zero/1.0/
+
+Publisher: https://quaternius.com/
+Character: https://quaternius.com/packs/ultimatemodularcharacters.html
+Firearms: https://quaternius.com/packs/animatedguns.html
+Modular firearms: https://quaternius.com/packs/scifimodularguns.html
+
+Original archive license independently retrieved from:
+beep2bleep/FreeAssetsByKenneyNLandQuaternius
+commit dea756baf3b3a4889d8c245e456a4791f961578a
+FreeModels by Quaternius[Patreon]/License.txt
+
+CC0 1.0 Universal (CC0 1.0)
+Public Domain Dedication
+https://creativecommons.org/publicdomain/zero/1.0/
+Models by @Quaternius
+https://www.patreon.com/quaternius

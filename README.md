@@ -5,8 +5,8 @@ Offline campaign, ten mission definitions, eight weapons, seven enemy
 archetypes, phased boss, objectives, loadouts, six upgrades per weapon, local
 currency/XP/stars, saves, touchscreen input, settings and reusable combat systems.
 
-**Status:** playable development campaign with imported, licensed skinned 3D
-characters, bone-attached weapon models and modular PBR environment meshes.
+**Status:** playable development campaign (free low-poly human art, not PUBG-level graphics) with imported, licensed skinned 3D
+human soldiers, bone-attached tactical firearm models and modular PBR environment meshes.
 GitHub Actions exports and verifies the Android APK. The APK has passed an API 35
 emulator check covering real touch navigation, mission launch, pause/resume,
 background/foreground handling and save persistence across process restart.

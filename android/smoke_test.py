@@ -7,6 +7,8 @@ import struct
 import subprocess
 import time
 
+from PIL import Image
+
 PACKAGE = "com.ironfallstudio.shooter"
 OUTPUT = Path("build/android-smoke")
 
@@ -40,6 +42,25 @@ def screenshot(name):
     width, height = struct.unpack(">II", image[16:24])
     assert width > height, f"Expected landscape, got {width}x{height}"
     return width, height
+
+
+def wait_game_frame():
+    # Scene construction can finish before the software GPU presents it.
+    # Check the rendered opaque health bar instead of trusting a scene log.
+    deadline = time.monotonic() + 45
+    while time.monotonic() < deadline:
+        screenshot("waiting-for-world")
+        with Image.open(OUTPUT / "waiting-for-world.png") as frame:
+            frame = frame.convert("RGB")
+            width, height = frame.size
+            pixels = frame.crop((int(width * .42), int(height * .89),
+                                 int(width * .58), int(height * .91))).getdata()
+            if sum(105 < r < 150 and 170 < g < 205 and 145 < b < 190
+                   for r, g, b in pixels) > 20:
+                print("PASS: Android presented the 3D gameplay frame", flush=True)
+                return
+        time.sleep(2)
+    raise AssertionError("Android never presented the gameplay HUD/world frame")
 
 
 def tap(x_fraction, y_fraction):
@@ -76,8 +97,10 @@ def main():
     screenshot("03-loadout")
     tap(0.5, 0.726)
     wait_screen("game")
+    wait_game_frame()
     screenshot("04-gameplay")
     tap(0.874, 0.846)  # ADS button; native touch input.
+    time.sleep(3)
     width, height = screenshot("04-aim")
     fire_x, fire_y = str(round(width * 0.945)), str(round(height * 0.786))
     adb("shell", "input", "swipe", fire_x, fire_y, fire_x, fire_y, "1000")
@@ -85,6 +108,7 @@ def main():
     while "IRONFALL_FIRE rifle" not in logs() and time.monotonic() < deadline:
         time.sleep(0.5)
     assert "IRONFALL_FIRE rifle" in logs(), "Native fire touch did not shoot"
+    time.sleep(3)
     screenshot("04-fired")
     tap(0.812, 0.889)  # Reload button.
     assert "IRONFALL_RELOAD rifle" in logs(), "Native reload touch did not begin reload"
@@ -111,7 +135,7 @@ def main():
     assert profile() == saved, "Android save changed on process restart"
     screenshot("07-relaunch")
     assert adb("shell", "pidof", PACKAGE).strip(), "Android process exited"
-    assert not re.search(r"SCRIPT ERROR:|Parse Error:|Failed loading resource|FATAL EXCEPTION|Program linking failed", logs()), "Android runtime reported errors"
+    assert not re.search(r"SCRIPT ERROR:|Parse Error:|Failed loading resource|FATAL EXCEPTION|Program linking failed|!is_inside_tree", logs()), "Android runtime reported errors"
     print("ANDROID SMOKE PASS: launch, real touch navigation, mission, ADS/fire/reload, pause/resume, background/foreground, save/relaunch", flush=True)
 
 
