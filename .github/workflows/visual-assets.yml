@@ -18,9 +18,19 @@ jobs:
         run: python3 tools/fetch_visual_assets.py
       - uses: actions/upload-artifact@v4
         with:
-          name: ironfall-licensed-visual-sources
+          name: ironfall-character-source
           path: |
-            build/licensed-visual-sources.zip
+            assets/vendor/godot_tps/player
+            assets/licenses/Godot-TPS-LICENSE.md
+            tools/visual_sources.json
+          if-no-files-found: error
+          retention-days: 14
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ironfall-environment-source
+          path: |
+            assets/vendor/godot_tps/level
             build/visual-inventory.json
+            assets/licenses/Godot-TPS-LICENSE.md
           if-no-files-found: error
           retention-days: 14
