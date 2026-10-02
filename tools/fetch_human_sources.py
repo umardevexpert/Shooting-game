@@ -29,7 +29,7 @@ for name, folder in [('animated-guns-fbx','155Ce5mXbboLYaAADOIBDl9N5EOf0zm8X'),(
                 assert result and target.is_file(),item.path
                 print('GUN_DOWNLOADED',target.name,target.stat().st_size,hashlib.sha256(target.read_bytes()).hexdigest(),flush=True)
     except Exception as error:print('DRIVE_ERROR',name,str(error),flush=True)
-for name in ['universal-base-characters','universal-animation-library']:
+for name in ['universal-base-characters','universal-animation-library','modular-character-outfits-fantasy','ultimate-gun-pack','ultimate-modular-characters']:
     try:
         opener=urllib.request.build_opener(urllib.request.HTTPCookieProcessor(http.cookiejar.CookieJar()))
         base='https://quaternius.itch.io/'+name
@@ -70,11 +70,15 @@ for name in ['universal-base-characters','universal-animation-library']:
                 for asset in model.get('buffers',[])+model.get('images',[]):
                     if 'uri' not in asset:continue
                     uri=asset['uri'];source_name=posixpath.normpath(str(parent/uri))
-                    target=target_folder/uri;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(z.read(source_name))
+                    target=target_folder/uri;target.parent.mkdir(parents=True,exist_ok=True);if source_name not in z.namelist():
+                        source_name=source_name.replace('_png.png','.png')
+                    target.write_bytes(z.read(source_name))
                 print('HUMAN_GLTF_EXTRACTED',flush=True)
             inventory=[{'path':info.filename,'bytes':info.file_size} for info in z.infolist() if not info.is_dir()]
             (out/(name+'-inventory.json')).write_text(json.dumps(inventory,indent=2))
             print('FREE_MODELS',name,[entry for entry in inventory if entry['path'].lower().endswith(('.glb','.gltf','.fbx','.txt'))],flush=True)
+            if name == 'modular-character-outfits-fantasy':
+                print('OUTFIT_FILES', [x['path'] for x in inventory if x['path'].lower().endswith(('.gltf','.glb'))],flush=True)
             candidates=[entry for entry in inventory if entry['path'].lower().endswith('.glb')]
             if candidates:
                 entry=next((e for e in candidates if 'male' in e['path'].lower() and 'female' not in e['path'].lower()),candidates[0])
