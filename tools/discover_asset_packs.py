@@ -20,3 +20,14 @@ for publisher, url in [
         print(json.dumps(evidence), flush=True)
     except Exception as error:
         print(json.dumps({"publisher": publisher, "url": url, "error": str(error)}), flush=True)
+
+# The official page above explicitly dedicates this pack to CC0.
+pack_url = 'https://kenney.nl/media/pages/assets/blaster-kit/261d80a716-1753959510/kenney_blaster-kit_2.1.zip'
+pack = output / 'kenney_blaster-kit_2.1.zip'
+with urllib.request.urlopen(pack_url, timeout=60) as response:
+    pack.write_bytes(response.read())
+import hashlib
+import zipfile
+print(json.dumps({'download': pack_url, 'bytes': pack.stat().st_size, 'sha256': hashlib.sha256(pack.read_bytes()).hexdigest()}), flush=True)
+with zipfile.ZipFile(pack) as archive:
+    print(json.dumps({'files': archive.namelist()}), flush=True)
