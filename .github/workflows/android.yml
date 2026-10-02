@@ -57,6 +57,7 @@ jobs:
       - name: Run component tests and campaign playthroughs
         run: |
           godot --version
+          python3 tools/verify_asset_manifest.py
           python3 -m unittest discover -s tests -p 'test_android_tooling.py' 2>&1 | tee build/tooling-tests.log
           bash tests/run.sh 2>&1 | tee build/tests.log
 

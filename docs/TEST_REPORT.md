@@ -5,7 +5,7 @@ Godot 4.6.3.stable.official.7d41c59c4 on Linux.
 ## Passed
 
 - Godot resource import and script compilation.
-- **81 component/integration checks, zero failures.**
+- **91 component/integration checks, zero failures.**
 - **Ten end-to-end mission playthroughs through normal controls**, on Easy with
   the standard rifle/pistol loadout and normal health/armor. The driver moves,
   aims, shoots, reloads and interacts without teleporting, changing health or
@@ -42,33 +42,37 @@ randomized, so individual run times vary.
 | Elite Stronghold | 30.7s | 100.0 | Saved |
 | The Warden | 11.3s | 63.3 | Saved |
 
-## Blocked / unverified
+## Android verification
 
-**No APK exists.** The attempted Android export reports missing Godot Android
-templates, full JDK, adb and build tools/apksigner. Network permission requests
-for installing these did not execute; ordinary sandbox commands cannot connect
-to the session proxy. The Android installer/preset are prepared but not verified
-end-to-end.
+GitHub Actions run [37060846180](https://github.com/umardevexpert/Shooting-game/actions/runs/37060846180)
+passed APK export/signature/package/ABI checks and API 35 x86_64 Android emulator
+launch, touchscreen menu navigation, mission entry, pause/resume,
+Home/foreground lifecycle, local save and process restart checks.
+That run predates the imported 3D art; the next run verifies the updated APK.
 
-**No rendered visual inspection.** Xorg cannot create display sockets in this
-sandbox. Headless Godot uses a dummy renderer. Menu mounting does not establish
-visual layout, clipping, contrast or physical safe-area appearance.
+## Licensed asset validation
 
-Physical touch latency, haptics, audible sound/music, Android back delivery,
-installation and real lifecycle behavior require a device. Godot-level input and
-lifecycle events were simulated. No Android FPS, GPU, thermal, battery or memory
-benchmark was performed; 60 FPS is a target rather than a measured result.
+45 third-party runtime assets have complete manifest entries and matching SHA-256
+checksums. Tests instantiate eight distinct weapon meshes, verify the actual
+106-bone skinned humanoid and right-hand socket, evaluate locomotion bone changes,
+load PBR materials and confirm hitscan starts at the physical muzzle.
+These are structural/gameplay checks; rendered animation quality needs inspection.
 
-Models, environments, animations and synthesized audio are development assets.
-Production art, human balancing and accessibility review remain release work.
+## Remaining release verification
+
+Physical touch latency, haptics, audible sound/music, device cutouts, minimum-API
+compatibility and GPU/thermal/battery/memory benchmarks require physical devices.
+60 FPS is a target rather than a measured result. Emulator software rendering is
+not a mobile GPU performance benchmark. Human balancing, animation polish,
+additional environment variety and accessibility review remain release work.
 Precise automated aiming is not representative of typical player skill.
 
 ## Evidence
 
-- `build/final-verification.log`: final 81 checks and ten control-driven runs.
-- `build/android-export.log`: attempted APK export and missing dependency errors.
-- `build/export-pack.log`, `build/pack-launch.log`: PCK build and launch.
+- `build/weapon-assets-checks.log`: 91 checks and ten control-driven mission runs.
+- GitHub Actions APK, test/build logs and Android screenshot/log artifacts.
+- `assets/manifest.json`: actual imported assets, licenses and checksums.
 
-Editor import/export logs contain `_sock == -1` / `ERR_CANT_CREATE` from the
-optional debug listener's socket restriction. Gameplay verification logs contain
-no script errors or leaked resources.
+Local editor logs contain `_sock == -1` / `ERR_CANT_CREATE` from the optional
+sandbox-restricted debug listener. Gameplay validation fails on script or missing
+resource errors and reports none in the passing run.

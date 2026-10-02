@@ -49,6 +49,7 @@ func _ready() -> void:
 	visual = ActorVisual.new()
 	add_child(visual)
 	visual.build(Color(config.color), kind == "heavy")
+	visual.equip_weapon(config.get("weapon", "rifle"))
 	if kind == "boss":
 		visual.scale *= 1.8
 		boss_ring = Geometry.ring(world, float(Catalog.player.grenade_radius), Vector3.ZERO, Color("df785d"))
@@ -91,6 +92,8 @@ func _physics_process(delta: float) -> void:
 	if state == State.ATTACK and visible_player and fire_timer <= 0 and reload_time == 0 and not target.health.dead:
 		_shoot()
 	if kind == "boss": _boss_update(delta)
+	visual.local_movement = visual.global_basis.inverse() * velocity
+	visual.aim_pitch = asin((target.global_position + Vector3.UP * 1.1 - visual.muzzle_origin()).normalized().y)
 	visual.animate(delta, Vector2(velocity.x, velocity.z).length(), state == State.ATTACK, reload_time > 0, false)
 
 func _decide() -> void:
@@ -157,7 +160,7 @@ func _shoot() -> void:
 	magazine -= 1
 	if magazine == 0: reload_time = 2.4
 	fire_timer = 1.0 / (float(config.rate) * (1.0 + (boss_phase - 1) * 0.15))
-	var origin := global_position + Vector3.UP * (1.4 * float(get_meta("body_scale", 1.0)))
+	var origin := visual.muzzle_origin()
 	var endpoint := target.global_position + Vector3.UP * 1.1
 	var accuracy := clampf(float(config.accuracy) * float(world.difficulty.accuracy), 0.1, 0.94)
 	if rng.randf() > accuracy:

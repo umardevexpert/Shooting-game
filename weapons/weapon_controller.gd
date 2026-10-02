@@ -19,6 +19,7 @@ func setup(owner_player: CharacterBody3D, rig: ShoulderCamera, arena: Node3D) ->
 	rng.randomize()
 	for id in Profile.data.loadout:
 		weapons.append(WeaponState.new(id, Catalog.weapon(id)))
+	player.visual.equip_weapon(current().id)
 
 func current() -> WeaponState:
 	return weapons[slot]
@@ -27,10 +28,13 @@ func switch_weapon() -> void:
 	current().cancel_reload()
 	slot = (slot + 1) % weapons.size()
 	current().trigger_down = true
+	player.visual.equip_weapon(current().id)
 	Audio.play("ui", "UI")
 
 func reload() -> void:
-	if current().reload(): Audio.play("reload", "Weapon")
+	if current().reload():
+		Audio.play("reload", "Weapon")
+		if OS.is_debug_build(): print("IRONFALL_RELOAD ", current().id)
 
 func update(delta: float, trigger: bool, aiming: bool) -> void:
 	for weapon in weapons: weapon.tick(delta)
@@ -53,6 +57,7 @@ func shoot(aiming: bool) -> void:
 				best = dot
 				direction = direction.lerp((aim_at - origin).normalized(), 0.28).normalized()
 	fired_count += 1
+	if OS.is_debug_build() and fired_count == 1: print("IRONFALL_FIRE ", current().id)
 	if data.speed > 0:
 		world.effects.projectile(origin, direction * float(data.speed), float(data.damage), player, 0.0)
 	else:
@@ -81,7 +86,7 @@ func shoot(aiming: bool) -> void:
 
 func muzzle_origin() -> Vector3:
 	var shoulder := player.global_position + Vector3(0, 1.45, 0)
-	var desired: Vector3 = shoulder - player.visual.global_basis.z * 0.65
+	var desired: Vector3 = player.visual.muzzle_origin()
 	# Keep the muzzle on the player's side of cover even if the visual gun clips.
 	var ray := PhysicsRayQueryParameters3D.create(shoulder, desired, 1)
 	var obstruction := player.get_world_3d().direct_space_state.intersect_ray(ray)

@@ -1,15 +1,17 @@
 # IRONFALL — Operation Blackout
 
 A native **Godot 4.6.3 third-person 3D shooter project** for landscape Android.
-Offline campaign, ten mission definitions, seven weapon families, seven enemy
+Offline campaign, ten mission definitions, eight weapons, seven enemy
 archetypes, phased boss, objectives, loadouts, six upgrades per weapon, local
 currency/XP/stars, saves, touchscreen input, settings and reusable combat systems.
 
-**Status:** playable development implementation with procedural placeholder art
-and synthesized audio. Automated engine integration is verified; physical Android
-playtesting, rendered UI inspection and production art are not verified here.
-No APK was built in this workspace: Android SDK/export templates could not be
-downloaded under the session's network permissions. See [test report](docs/TEST_REPORT.md).
+**Status:** playable development campaign with imported, licensed skinned 3D
+characters, bone-attached weapon models and modular PBR environment meshes.
+GitHub Actions exports and verifies the Android APK. The APK has passed an API 35
+emulator check covering real touch navigation, mission launch, pause/resume,
+background/foreground handling and save persistence across process restart.
+Physical-device performance and final artwork/animation quality remain release
+work. See [asset pipeline](docs/ASSET_PIPELINE.md) and [test report](docs/TEST_REPORT.md).
 
 ## Play on desktop
 
@@ -41,8 +43,7 @@ Use objective rings and on-screen prompts. Escape rings finish missions.
 
 **GitHub Actions:** the included `.github/workflows/android.yml` builds an APK on
 GitHub's runner and uploads it as `ironfall-debug-apk`. See
-[workflow instructions](docs/GITHUB_ACTIONS.md). A hosted run has not yet been
-executed; this provides a build route where local network access is restricted.
+[workflow instructions](docs/GITHUB_ACTIONS.md). The build and Android emulator jobs have both completed successfully.
 
 Uses Godot's Gradle export path to set API 26 minimum / API 36 target.
 Requires Godot 4.6.3 export templates, Java **JDK 17 or later** (not just the JRE),
@@ -84,8 +85,9 @@ combat events; they are not substitutes for human balance/performance playtests.
 | Location | Responsibility |
 |---|---|
 | `core/` | Game states, lifecycle, reusable damage/health |
-| `player/` | Physics controller, input, camera, procedural pose presenter |
-| `weapons/` | Fire/reload state and shared hitscan/projectile execution |
+| `player/` | Physics controller, input, camera, imported model presenter |
+| `weapons/` | Fire/reload state, model/muzzle sockets and shared ballistics |
+| `characters/` / `art/` | Skeletal animation graph and reusable PBR materials |
 | `enemies/` | Perception, tactics, path following, bounded spawn queue, waves, boss |
 | `missions/` | Sequential objective rules, destructible target, rescue actor |
 | `levels/` | Arena assembly, obstacles, grid navigation, pickups, graphics |
@@ -99,8 +101,8 @@ combat events; they are not substitutes for human balance/performance playtests.
 Add weapons/enemies through catalog JSON. Add mission configurations with explicit
 layouts/objective chains and contiguous IDs; selection and save bounds follow
 the catalog length. Static cover is represented on a 1m grid; multilayer maps would need
-a navigation provider change. Geometry and poses can be replaced with imported
-models and AnimationTree while retaining controller logic.
+a navigation provider change. Imported models, bone mappings and animation clips can be replaced while retaining
+controller logic.
 
 Repeated effects and projectiles are pooled; characters are spawned only between
 encounters and retired after death. Active enemies are capped at ten and tactical
@@ -109,7 +111,11 @@ High enables 4× MSAA. Actual FPS and thermals require an Android GPU/device tes
 
 ## Assets and licenses
 
-Procedural models/environment, synthesized audio and icon are original development
-assets. Fonts: DejaVu Sans, licensed in `assets/FONT_LICENSE.txt`.
+Character, source animations, environment meshes and PBR textures: official Godot
+TPS Demo, CC-BY 3.0, Juan Linietsky and Fernando Miguel Calabró. Starting weapon
+models: Kenney, CC0. Additional skeletal combat clips, synthesized audio and icon
+are original. The full attribution and source manifest is `assets/manifest.json`.
+Fonts: DejaVu Sans, licensed in `assets/FONT_LICENSE.txt`.
 Godot is MIT licensed: https://godotengine.org/license/.
-Placeholder content is intentionally replaceable and is not final production art.
+Further animation/art polish and physical-device performance are tracked in the
+asset pipeline document; this development build is not a final production release.

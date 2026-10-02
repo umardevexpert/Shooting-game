@@ -1,0 +1,122 @@
+{
+  "pistol": {
+    "model": "res://assets/vendor/kenney_fps/models/blaster.glb",
+    "scale": 0.34,
+    "offset": [
+      0,
+      -0.2,
+      0.4
+    ],
+    "muzzle": [
+      0,
+      0.36,
+      1.3
+    ],
+    "rotation": 0
+  },
+  "rifle": {
+    "model": "res://assets/vendor/kenney_fps/models/blaster-repeater.glb",
+    "scale": 0.44,
+    "offset": [
+      0,
+      -0.2,
+      0.4
+    ],
+    "muzzle": [
+      0,
+      0.36,
+      1.58
+    ],
+    "rotation": 0
+  },
+  "smg": {
+    "model": "res://assets/vendor/kenney_blaster_kit/models/blaster-d.glb",
+    "scale": 0.85,
+    "offset": [
+      0,
+      0.12,
+      0.05
+    ],
+    "muzzle": [
+      0,
+      0.17665,
+      0.509
+    ],
+    "rotation": 180
+  },
+  "shotgun": {
+    "model": "res://assets/vendor/kenney_blaster_kit/models/blaster-g.glb",
+    "scale": 0.95,
+    "offset": [
+      0,
+      0.12,
+      0.05
+    ],
+    "muzzle": [
+      0,
+      0.23395,
+      0.4031
+    ],
+    "rotation": 180
+  },
+  "sniper": {
+    "model": "res://assets/vendor/kenney_blaster_kit/models/blaster-f.glb",
+    "scale": 0.85,
+    "offset": [
+      0,
+      0.12,
+      0.05
+    ],
+    "muzzle": [
+      0,
+      0.2025,
+      0.7100000000000001
+    ],
+    "rotation": 180
+  },
+  "burst": {
+    "model": "res://assets/vendor/kenney_blaster_kit/models/blaster-q.glb",
+    "scale": 1,
+    "offset": [
+      0,
+      0.12,
+      0.05
+    ],
+    "muzzle": [
+      0,
+      0.141,
+      0.4102
+    ],
+    "rotation": 180
+  },
+  "heavy": {
+    "model": "res://assets/vendor/kenney_blaster_kit/models/blaster-p.glb",
+    "scale": 1.1,
+    "offset": [
+      0,
+      0.12,
+      0.05
+    ],
+    "muzzle": [
+      0,
+      0.15177,
+      0.48603999999999997
+    ],
+    "rotation": 180
+  },
+  "launcher": {
+    "model": "res://assets/vendor/kenney_blaster_kit/models/blaster-h.glb",
+    "scale": 1.15,
+    "offset": [
+      0,
+      0.12,
+      0.05
+    ],
+    "muzzle": [
+      0,
+      0.22175,
+      0.379
+    ],
+    "rotation": 180
+  }
+}

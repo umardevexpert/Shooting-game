@@ -1,51 +1,73 @@
 class_name ActorVisual
 extends Node3D
 
-var left_leg: Node3D
-var right_leg: Node3D
-var left_arm: Node3D
-var right_arm: Node3D
-var clock := 0.0
+const OPERATOR := preload("res://assets/models/operator.glb")
+const ALBEDO := preload("res://assets/textures/player_robot_albedo.png")
+const NORMAL := preload("res://assets/textures/player_robot_normal.png")
+const ORM := preload("res://assets/textures/player_robot_orm.png")
+var model: Node3D
+var skeleton: Skeleton3D
+var animator: HumanoidAnimator
+var weapon: WeaponVisual
 var hurt := 0.0
 var shot := 0.0
 var motion := "idle"
-var weapon_mesh: MeshInstance3D
+var aim_pitch := 0.0
+var local_movement := Vector3.ZERO
 
 func build(color: Color, heavy: bool = false) -> void:
-	var dark := Color("18232a")
-	Geometry.box(self, Vector3(0.65, 0.65, 0.38), Vector3(0, 1.15, 0), color)
-	Geometry.box(self, Vector3(0.48, 0.42, 0.13), Vector3(0, 1.18, -0.24), dark)
-	Geometry.box(self, Vector3(0.42, 0.36, 0.38), Vector3(0, 1.69, 0), color.lightened(0.13))
-	Geometry.box(self, Vector3(0.33, 0.12, 0.02), Vector3(0, 1.69, -0.2), Color("86c1c5"))
-	left_leg = _limb(Vector3(-0.18, 0.82, 0), Vector3(0.24, 0.7, 0.28), color.darkened(0.25))
-	right_leg = _limb(Vector3(0.18, 0.82, 0), Vector3(0.24, 0.7, 0.28), color.darkened(0.25))
-	left_arm = _limb(Vector3(-0.4, 1.4, 0), Vector3(0.18, 0.58, 0.2), color)
-	right_arm = _limb(Vector3(0.4, 1.4, 0), Vector3(0.18, 0.58, 0.2), color)
-	weapon_mesh = Geometry.box(right_arm, Vector3(0.12, 0.14, 0.72), Vector3(0, -0.36, -0.4), dark)
+	model = OPERATOR.instantiate()
+	add_child(model)
+	model.rotation.y = PI
+	model.scale = Vector3.ONE * 1.15
+	skeleton = model.find_child("Skeleton3D", true, false)
+	var body := StandardMaterial3D.new()
+	body.albedo_texture = ALBEDO
+	body.albedo_color = color.lightened(0.3)
+	body.normal_enabled = true
+	body.normal_texture = NORMAL
+	body.roughness_texture = ORM
+	body.roughness_texture_channel = BaseMaterial3D.TEXTURE_CHANNEL_GREEN
+	body.metallic_texture = ORM
+	body.metallic_texture_channel = BaseMaterial3D.TEXTURE_CHANNEL_BLUE
+	body.metallic = 1
+	body.ao_enabled = true
+	body.ao_texture = ORM
+	var emission := StandardMaterial3D.new()
+	emission.albedo_color = color.lightened(0.5)
+	emission.emission_enabled = true
+	emission.emission = Color("82c3d3")
+	for child in skeleton.get_children():
+		if child is MeshInstance3D:
+			for index in range(child.mesh.get_surface_count()):
+				var original: Material = child.mesh.surface_get_material(index)
+				child.set_surface_override_material(index, emission if original.resource_name == "robotemitter" else body)
+			if "Cannons" in child.name: child.visible = false
+	animator = HumanoidAnimator.new()
+	add_child(animator)
+	animator.setup(model)
+	var reference := skeleton.get_bone_global_pose(skeleton.find_bone("hand.R")).basis
+	var socket := BoneAttachment3D.new()
+	socket.name = "WeaponSocket"
+	socket.bone_name = "hand.R"
+	skeleton.add_child(socket)
+	weapon = WeaponVisual.new()
+	socket.add_child(weapon)
+	weapon.basis = reference.inverse().orthonormalized()
 	if heavy: scale *= 1.25
 
-func _limb(origin: Vector3, size: Vector3, color: Color) -> Node3D:
-	var pivot := Node3D.new()
-	add_child(pivot)
-	pivot.position = origin
-	Geometry.box(pivot, size, Vector3(0, -size.y / 2, 0), color)
-	return pivot
+func equip_weapon(id: String) -> void:
+	weapon.equip(id)
+	animator.switch_weapon()
+
+func muzzle_origin() -> Vector3:
+	return weapon.origin()
 
 func animate(delta: float, speed: float, aiming: bool, reloading: bool, dead: bool) -> void:
-	clock += delta * minf(speed * 2.5, 14.0)
+	motion = "death" if dead else "reload" if reloading else "shoot" if shot > 0 else "hit" if hurt > 0 else "aim" if aiming else "run" if speed > 5 else "walk" if speed > 0.2 else "idle"
+	animator.movement = Vector2(local_movement.x, -local_movement.z) / 3.0
+	animator.update(delta, speed, aiming, aim_pitch, reloading, shot, hurt, dead)
+	if shot > 0.9: weapon.kick()
+	weapon.update(delta)
 	hurt = move_toward(hurt, 0, delta * 5)
 	shot = move_toward(shot, 0, delta * 8)
-	motion = "death" if dead else "reload" if reloading else "shoot" if shot > 0 else "hit" if hurt > 0 else "aim" if aiming else "run" if speed > 5 else "walk" if speed > 0.2 else "idle"
-	if dead:
-		rotation.z = lerpf(rotation.z, 1.45, minf(delta * 6, 1))
-		position.y = lerpf(position.y, -0.45, minf(delta * 6, 1))
-		return
-	left_leg.rotation.x = sin(clock) * minf(speed / 8.0, 0.55)
-	right_leg.rotation.x = -left_leg.rotation.x
-	right_arm.rotation.x = -1.1 if aiming else -0.55
-	left_arm.rotation.x = -1.15 if aiming else -0.4
-	if reloading:
-		left_arm.rotation.z = sin(clock * 2) * 0.4 + 0.6
-	else: left_arm.rotation.z = 0.0
-	weapon_mesh.position.z = -0.4 + shot * 0.12
-	rotation.z = hurt * 0.12

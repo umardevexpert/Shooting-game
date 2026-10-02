@@ -1,0 +1,45 @@
+name: Prepare licensed 3D assets
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [asset-pipeline]
+    paths: ['tools/visual_sources.json', 'tools/fetch_visual_assets.py', '.github/workflows/visual-assets.yml']
+
+permissions:
+  contents: read
+
+jobs:
+  prepare:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch and inspect verified asset sources
+        run: python3 tools/fetch_visual_assets.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ironfall-character-source
+          path: |
+            assets/vendor/godot_tps/player
+            assets/licenses/Godot-TPS-LICENSE.md
+            tools/visual_sources.json
+          if-no-files-found: error
+          retention-days: 14
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ironfall-environment-source
+          path: |
+            assets/vendor/godot_tps/level/geometry/models
+            build/visual-inventory.json
+            assets/licenses/Godot-TPS-LICENSE.md
+          if-no-files-found: error
+          retention-days: 14
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ironfall-environment-textures
+          path: |
+            assets/vendor/godot_tps/level/textures
+            assets/licenses/Godot-TPS-LICENSE.md
+          if-no-files-found: error
+          retention-days: 14

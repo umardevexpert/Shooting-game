@@ -28,6 +28,8 @@ This is a debug-signed phone-testing APK. The temporary runner creates a debug
 key each run; updating an installed APK from another run may require uninstalling
 it first. Use a persistent private signing key for repeatable release builds.
 
-GitHub Actions can verify export/signing, but human playtesting and on-device
-performance/lifecycle tests remain necessary. This workflow has been checked
-locally; a successful hosted run is still required before claiming an APK exists.
+The workflow has successfully exported and verified APKs. Its separate API 35
+emulator job exercises real touch navigation, mission launch, pause/resume,
+background/foreground events and save/relaunch, and uploads screenshots/logs as
+`ironfall-android-smoke`. Both jobs passed in run 37060846180. Physical-device
+performance, human playtesting and final visual quality remain release checks.

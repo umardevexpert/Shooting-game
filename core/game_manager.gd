@@ -49,8 +49,8 @@ func _build_menu_stage() -> void:
 	actor.rotation.y = -0.35
 	actor.scale *= 1.75
 	actor.animate(0.01, 0, true, false, false)
-	Geometry.box(menu_stage, Vector3(1.8, 1.0, 1.5), Vector3(3.3, 0.5, -2), Color("48504b"))
-	Geometry.box(menu_stage, Vector3(1.6, 1.4, 1.5), Vector3(-1, 0.7, -3), Color("384952"))
+	MissionEnvironment.place(menu_stage, "crate", Vector3(3.3, 0, -2), Vector3(1.8, 1, 1.5))
+	MissionEnvironment.place(menu_stage, "container", Vector3(-1, 0, -3), Vector3(1.6, 1.4, 1.5))
 	var camera := Camera3D.new()
 	menu_stage.add_child(camera)
 	camera.position = Vector3(0.0, 2.8, 6.3)

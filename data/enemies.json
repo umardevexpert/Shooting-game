@@ -10,7 +10,8 @@
     "accuracy": 0.5,
     "reaction": 1.0,
     "color": "a06b56",
-    "reward": 10
+    "reward": 10,
+    "weapon": "rifle"
   },
   "rusher": {
     "name": "Rusher",
@@ -23,7 +24,8 @@
     "accuracy": 0.9,
     "reaction": 0.5,
     "color": "c77751",
-    "reward": 12
+    "reward": 12,
+    "weapon": "smg"
   },
   "heavy": {
     "name": "Heavy",
@@ -36,7 +38,8 @@
     "accuracy": 0.54,
     "reaction": 1.2,
     "color": "929876",
-    "reward": 25
+    "reward": 25,
+    "weapon": "heavy"
   },
   "sniper": {
     "name": "Sniper",
@@ -49,7 +52,8 @@
     "accuracy": 0.82,
     "reaction": 1.8,
     "color": "7f9e94",
-    "reward": 18
+    "reward": 18,
+    "weapon": "sniper"
   },
   "shotgun": {
     "name": "Breacher",
@@ -62,7 +66,8 @@
     "accuracy": 0.72,
     "reaction": 0.75,
     "color": "ac9375",
-    "reward": 18
+    "reward": 18,
+    "weapon": "shotgun"
   },
   "elite": {
     "name": "Elite",
@@ -75,7 +80,8 @@
     "accuracy": 0.72,
     "reaction": 0.6,
     "color": "8595b4",
-    "reward": 30
+    "reward": 30,
+    "weapon": "burst"
   },
   "boss": {
     "name": "WARDEN",
@@ -88,6 +94,7 @@
     "accuracy": 0.7,
     "reaction": 1,
     "color": "b79967",
-    "reward": 150
+    "reward": 150,
+    "weapon": "heavy"
   }
 }

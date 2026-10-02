@@ -66,6 +66,8 @@ func _physics_process(delta: float) -> void:
 	elif desired.length_squared() > 0.01:
 		visual.rotation.y = lerp_angle(visual.rotation.y, atan2(-desired.x, -desired.z), minf(1, delta * 12))
 	# Muzzle uses the actor's facing, while aim is always obtained from the camera.
+	visual.aim_pitch = camera_rig.pitch
+	visual.local_movement = visual.global_basis.inverse() * velocity
 	weapons.update(delta, controls.fire and dodge_remaining <= 0, controls.aim)
 	visual.animate(delta, Vector2(velocity.x, velocity.z).length(), controls.aim or controls.fire, weapons.current().reload_remaining > 0, false)
 	step_time -= delta

@@ -401,7 +401,7 @@ func _results(victory: bool) -> void:
 
 func _about() -> void:
 	var body := _page("IRONFALL", "OPERATION BLACKOUT  /  DEVELOPMENT CAMPAIGN")
-	_label(body, "A complete offline tactical gameplay foundation.\n\nEngine: Godot 4.6.3, MIT licensed.\nArt: original procedural placeholder environments and characters.\nAnimation: procedural articulated poses.\nAudio: original synthesized effects and soundtrack.\nFonts: DejaVu Sans (see assets/FONT_LICENSE.txt).\n\nNo account, ads, in-app purchases or internet connection required.\nProduction artwork and hardware optimization are separate release tasks.", 18, MUTED).autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_label(body, "IRONFALL / OPERATION BLACKOUT\n\n3D character, source animations, environment meshes and PBR textures:\n© 2018 Juan Linietsky and Fernando Miguel Calabró.\nGodot TPS Demo • Creative Commons Attribution 3.0.\nModified for Ironfall. github.com/godotengine/tps-demo\ncreativecommons.org/licenses/by/3.0/\n\nStarting weapon models / texture atlas: Kenney • CC0.\nAdditional combat animations, audio and icon: original Ironfall assets.\nFonts: DejaVu Sans (assets/FONT_LICENSE.txt).\nEngine: Godot 4.6.3 • MIT.\n\nOffline campaign • No account, ads or in-app purchases.\nSee assets/manifest.json for sources and modifications.", 16, MUTED).autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 
 func go_back() -> void:
 	if screen == "data_error":

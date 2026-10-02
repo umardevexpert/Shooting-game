@@ -35,6 +35,7 @@ func _run() -> void:
 	check(game.arena.spawner.active.size() == 3, "Training mission spawns three enemies")
 	check(game.arena.player.is_on_floor(), "Player collides with arena floor")
 	await _touch_and_pause_tests()
+	_asset_tests()
 	await _combat_tests()
 	await _campaign_tests()
 	await _layout_tests()
@@ -176,6 +177,29 @@ func _touch_and_pause_tests() -> void:
 	game.arena.player.weapons.switch_weapon()
 	check(game.arena.player.weapons.current().id != original, "Live weapon switching selects secondary")
 	game.arena.player.weapons.switch_weapon()
+
+func _asset_tests() -> void:
+	var visual: ActorVisual = game.arena.player.visual
+	check(visual.skeleton.get_bone_count() == 106 and visual.skeleton.find_bone("hand.R") >= 0, "Imported humanoid retains weighted skeleton and hand attachment bone")
+	var body: MeshInstance3D = visual.model.find_child("Robot_Body", true, false)
+	check(body.mesh is ArrayMesh and body.skin != null, "Player renders an imported skinned mesh")
+	check(visual.animator.tree.active and visual.animator.player.has_animation("combat/reload") and visual.animator.player.has_animation("combat/death"), "Animation blend graph includes authored reload and death clips")
+	check(visual.weapon.get_parent() is BoneAttachment3D and visual.weapon.get_parent().bone_name == "hand.R", "Weapon remains attached to the animated hand bone")
+	check(game.arena.player.weapons.muzzle_origin().distance_to(visual.weapon.muzzle.global_position) < 0.03, "Clear muzzle ray starts at actual model muzzle socket")
+	check(MaterialLibrary.get_material("container2").normal_texture != null and MaterialLibrary.get_material("mid_cargo_box").albedo_texture != null, "Imported environment materials load albedo and normal maps")
+	var thigh := visual.skeleton.find_bone("thigh.L")
+	visual.local_movement = Vector3(0, 0, -3)
+	visual.animate(0.1, 3, false, false, false)
+	var first := visual.skeleton.get_bone_pose_rotation(thigh)
+	visual.animate(0.2, 3, false, false, false)
+	check(first.angle_to(visual.skeleton.get_bone_pose_rotation(thigh)) > 0.01, "Locomotion changes the skinned leg pose over time")
+
+	var models: Array[String] = []
+	for id in Catalog.weapons:
+		visual.equip_weapon(id)
+		models.append(visual.weapon.model.scene_file_path)
+	check(models.size() == 8 and not models.any(func(path: String) -> bool: return models.count(path) > 1), "Eight weapon categories instantiate distinct imported models")
+	visual.equip_weapon("rifle")
 
 func _combat_tests() -> void:
 	var arena: CombatArena = game.arena

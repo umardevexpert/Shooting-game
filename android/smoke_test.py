@@ -26,7 +26,7 @@ def wait_screen(name, count=1):
     deadline = time.monotonic() + 30
     while time.monotonic() < deadline:
         if logs().count("IRONFALL_SCREEN " + name + "\n") >= count:
-            time.sleep(0.6)  # Allow the UI transition to finish before touch input.
+            time.sleep(2)  # Allow transitions and software-rendered frames to finish.
             print(f"PASS: Android screen {name} ({count})", flush=True)
             return
         time.sleep(0.5)
@@ -77,6 +77,18 @@ def main():
     tap(0.5, 0.726)
     wait_screen("game")
     screenshot("04-gameplay")
+    tap(0.874, 0.846)  # ADS button; native touch input.
+    width, height = screenshot("04-aim")
+    fire_x, fire_y = str(round(width * 0.945)), str(round(height * 0.786))
+    adb("shell", "input", "swipe", fire_x, fire_y, fire_x, fire_y, "1000")
+    deadline = time.monotonic() + 10
+    while "IRONFALL_FIRE rifle" not in logs() and time.monotonic() < deadline:
+        time.sleep(0.5)
+    assert "IRONFALL_FIRE rifle" in logs(), "Native fire touch did not shoot"
+    screenshot("04-fired")
+    tap(0.812, 0.889)  # Reload button.
+    assert "IRONFALL_RELOAD rifle" in logs(), "Native reload touch did not begin reload"
+    print("PASS: Android native ADS, fire and reload inputs", flush=True)
     # Exercise the actual touchscreen pause control.
     tap(0.969, 0.047)
     wait_screen("pause")
@@ -100,7 +112,7 @@ def main():
     screenshot("07-relaunch")
     assert adb("shell", "pidof", PACKAGE).strip(), "Android process exited"
     assert not re.search(r"SCRIPT ERROR:|Parse Error:|Failed loading resource|FATAL EXCEPTION|Program linking failed", logs()), "Android runtime reported errors"
-    print("ANDROID SMOKE PASS: launch, real touch navigation, mission, pause/resume, background/foreground, save/relaunch", flush=True)
+    print("ANDROID SMOKE PASS: launch, real touch navigation, mission, ADS/fire/reload, pause/resume, background/foreground, save/relaunch", flush=True)
 
 
 if __name__ == "__main__":

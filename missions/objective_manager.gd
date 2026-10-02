@@ -14,6 +14,7 @@ var pillar: MeshInstance3D
 var target: ObjectiveTarget
 var engineer: RescueNPC
 var wave_delay := 0.0
+var objective_prop: Node3D
 
 func setup(arena: Node3D, definitions: Array) -> void:
 	world = arena
@@ -104,6 +105,7 @@ func _advance() -> void:
 	index += 1
 	progress = 0
 	if index >= steps.size():
+		if is_instance_valid(objective_prop): objective_prop.queue_free()
 		finished = true
 		marker.visible = false
 		pillar.visible = false
@@ -115,6 +117,9 @@ func _advance() -> void:
 
 func _update_marker() -> void:
 	var step := current()
+	if is_instance_valid(objective_prop): objective_prop.queue_free()
+	if step.type in ["collect", "activate"]:
+		objective_prop = MissionEnvironment.place(world, "supply" if step.type == "collect" else "generator", _position(step), Vector3(0.8, 0.5, 0.6) if step.type == "collect" else Vector3(1.2, 1.6, 1.2))
 	marker.visible = step.has("position")
 	pillar.visible = marker.visible
 	marker.global_position = _position(step) + Vector3.UP * 0.045

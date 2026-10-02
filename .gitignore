@@ -6,6 +6,7 @@ android/sdk/
 android/jdk/
 android/build/
 .gradle/
+assets/vendor/godot_tps/
 android/*.keystore
 *.tmp
 __pycache__/

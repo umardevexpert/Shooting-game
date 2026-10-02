@@ -1,5 +1,6 @@
 extends Node
 
+var weapon_visuals: Dictionary
 var weapons: Dictionary
 var enemies: Dictionary
 var difficulties: Dictionary
@@ -10,6 +11,7 @@ var errors: Array[String] = []
 
 func _ready() -> void:
 	weapons = _read("weapons", {})
+	weapon_visuals = _read("weapon_visuals", {})
 	enemies = _read("enemies", {})
 	difficulties = _read("difficulty", {})
 	missions = _read("missions", [])
@@ -33,6 +35,8 @@ func validate_data() -> Array[String]:
 	var problems: Array[String] = []
 	if not weapons.has("pistol") or not weapons.has("rifle"): problems.append("Starting weapons missing")
 	for id in weapons:
+		if not weapon_visuals.get(id) is Dictionary or not ResourceLoader.exists(str(weapon_visuals.get(id, {}).get("model", ""))):
+			problems.append("Weapon model missing: " + str(id))
 		if not weapons[id] is Dictionary:
 			problems.append("Invalid weapon " + str(id))
 			continue

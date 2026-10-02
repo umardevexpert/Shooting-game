@@ -131,5 +131,24 @@
     "unlock": 7,
     "cost": 1000,
     "color": "c6ae72"
+  },
+  "heavy": {
+    "name": "Cyclone MG",
+    "category": "MACHINE GUN",
+    "mode": "auto",
+    "damage": 28,
+    "rate": 7,
+    "magazine": 70,
+    "reserve": 210,
+    "reload": 3.4,
+    "spread": 0.035,
+    "recoil": 0.026,
+    "range": 80,
+    "headshot": 1.5,
+    "pellets": 1,
+    "speed": 0,
+    "unlock": 6,
+    "cost": 900,
+    "color": "a3b69a"
   }
 }

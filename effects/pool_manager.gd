@@ -1,6 +1,8 @@
 class_name CombatEffects
 extends Node3D
 
+const GRENADE := preload("res://assets/vendor/kenney_blaster_kit/models/grenade-a.glb")
+const ROUND := preload("res://assets/vendor/kenney_blaster_kit/models/bullet-foam.glb")
 const MAX_EFFECTS := 96
 const MAX_PROJECTILES := 24
 var effects: Array[Dictionary] = []
@@ -15,9 +17,17 @@ func _ready() -> void:
 		mesh.visible = false
 		effects.append({"mesh": mesh, "life": 0.0, "total": 1.0, "kind": "", "base": Vector3.ONE})
 	for i in range(MAX_PROJECTILES):
-		var mesh := Geometry.sphere(self, 0.12, Vector3.ZERO, Color("f3be63"))
+		var mesh := Node3D.new()
+		add_child(mesh)
+		var grenade := GRENADE.instantiate()
+		var round_model := ROUND.instantiate()
+		mesh.add_child(grenade)
+		mesh.add_child(round_model)
+		grenade.scale = Vector3.ONE * 0.65
+		round_model.scale = Vector3.ONE * 3
+		round_model.rotation.x = -PI / 2
 		mesh.visible = false
-		projectiles.append({"mesh": mesh, "active": false, "velocity": Vector3.ZERO, "damage": 0.0, "owner": null, "life": 0.0, "gravity": 0.0})
+		projectiles.append({"mesh": mesh, "grenade": grenade, "round": round_model, "active": false, "velocity": Vector3.ZERO, "damage": 0.0, "owner": null, "life": 0.0, "gravity": 0.0})
 
 func _effect(position_value: Vector3, scale_value: Vector3, duration: float, color: Color, kind: String) -> MeshInstance3D:
 	var effect := effects[cursor]
@@ -65,6 +75,9 @@ func projectile(origin: Vector3, velocity: Vector3, damage: float, source: Node3
 		item.owner = source
 		item.life = 3.0 if gravity_value > 0 else 4.0
 		item.gravity = gravity_value
+		item.grenade.visible = gravity_value > 0
+		item.round.visible = gravity_value == 0
+		if velocity.length_squared() > 0.01: item.mesh.look_at(origin + velocity, Vector3.RIGHT if absf(velocity.normalized().y) > 0.98 else Vector3.UP)
 		return true
 	return false
 
