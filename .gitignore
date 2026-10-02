@@ -1,0 +1,9 @@
+.godot/
+.runtime/
+build/*
+!build/.gitkeep
+android/sdk/
+android/jdk/
+android/*.keystore
+*.tmp
+__pycache__/

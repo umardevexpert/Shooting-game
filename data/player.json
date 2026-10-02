@@ -1,0 +1,21 @@
+{
+  "health": 100,
+  "armor": 40,
+  "speed": 4.8,
+  "sprint": 7.2,
+  "aim_speed": 2.8,
+  "acceleration": 20,
+  "gravity": 20,
+  "grenades": 3,
+  "grenade_damage": 100,
+  "grenade_radius": 6,
+  "camera_distance": 4.2,
+  "upgrades": {
+    "damage": 0.1,
+    "magazine": 0.08,
+    "reload": 0.06,
+    "accuracy": 0.08,
+    "rate": 0.04,
+    "stability": 0.08
+  }
+}

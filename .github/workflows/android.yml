@@ -1,0 +1,113 @@
+name: Build Android APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main, master, 'ironfall/**']
+    paths-ignore: ['docs/**', '*.md']
+  pull_request:
+    paths-ignore: ['docs/**', '*.md']
+
+permissions:
+  contents: read
+
+concurrency:
+  group: android-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  GODOT_VERSION: '4.6.3'
+  GODOT_LINUX_SHA256: d0bc2113065e481c9c2c2b2c37daa4e8be3fe9e27f0ab9ab0b6096e9a37907f3
+
+jobs:
+  build:
+    name: Test and export Android
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Check out project
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Install Godot
+        run: |
+          mkdir -p "$RUNNER_TEMP/ironfall-godot" build
+          curl --fail --location --retry 3 --connect-timeout 15 --max-time 600 \
+            "https://github.com/godotengine/godot-builds/releases/download/${GODOT_VERSION}-stable/Godot_v${GODOT_VERSION}-stable_linux.x86_64.zip" \
+            --output "$RUNNER_TEMP/godot.zip"
+          echo "$GODOT_LINUX_SHA256  $RUNNER_TEMP/godot.zip" | sha256sum --check
+          unzip -q "$RUNNER_TEMP/godot.zip" -d "$RUNNER_TEMP/ironfall-godot"
+          mv "$RUNNER_TEMP/ironfall-godot/Godot_v${GODOT_VERSION}-stable_linux.x86_64" "$RUNNER_TEMP/ironfall-godot/godot"
+          chmod +x "$RUNNER_TEMP/ironfall-godot/godot"
+          echo "$RUNNER_TEMP/ironfall-godot" >> "$GITHUB_PATH"
+
+      - name: Run component tests and campaign playthroughs
+        run: |
+          godot --version
+          python3 -m unittest discover -s tests -p 'test_android_tooling.py' 2>&1 | tee build/tooling-tests.log
+          bash tests/run.sh 2>&1 | tee build/tests.log
+
+      - name: Cache Android export templates
+        uses: actions/cache@v4
+        with:
+          path: .runtime/data/godot/export_templates
+          key: godot-android-${{ runner.os }}-${{ env.GODOT_VERSION }}-v1
+
+      - name: Configure Android SDK and export templates
+        run: |
+          python3 android/install_dependencies.py --use-system-tooling 2>&1 | tee build/tooling.log
+
+      - name: Export APK
+        run: |
+          bash android/build.sh 2>&1 | tee build/android-build.log
+
+      - name: Verify APK signature and contents
+        run: |
+          sdk_root="${ANDROID_HOME:-${ANDROID_SDK_ROOT:-}}"
+          "$sdk_root/build-tools/36.0.0/apksigner" verify --verbose --print-certs build/ironfall-debug.apk | tee build/signature.log
+          "$sdk_root/build-tools/36.0.0/aapt" dump badging build/ironfall-debug.apk | tee build/apk-info.log
+          python3 - <<'PY'
+          from pathlib import Path
+          import zipfile
+          apk = Path('build/ironfall-debug.apk')
+          assert apk.stat().st_size > 1_000_000, 'APK unexpectedly small'
+          with zipfile.ZipFile(apk) as archive:
+              assert archive.testzip() is None, 'Corrupt APK'
+              assert 'AndroidManifest.xml' in archive.namelist()
+              for abi in ['arm64-v8a', 'x86_64']:
+                  assert any(name.startswith(f'lib/{abi}/') and name.endswith('.so') for name in archive.namelist()), f'Missing {abi}'
+          assert "package: name='com.ironfallstudio.shooter'" in Path('build/apk-info.log').read_text(), 'Wrong package ID'
+          PY
+          sha256sum build/ironfall-debug.apk > build/ironfall-debug.apk.sha256
+
+      - name: Upload installable APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ironfall-debug-apk
+          path: |
+            build/ironfall-debug.apk
+            build/ironfall-debug.apk.sha256
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Upload build and test logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ironfall-build-logs
+          path: build/*.log
+          if-no-files-found: warn
+          retention-days: 14

@@ -1,0 +1,93 @@
+{
+  "soldier": {
+    "name": "Soldier",
+    "health": 65,
+    "armor": 5,
+    "speed": 2.5,
+    "damage": 7,
+    "range": 22,
+    "rate": 1.2,
+    "accuracy": 0.5,
+    "reaction": 1.0,
+    "color": "a06b56",
+    "reward": 10
+  },
+  "rusher": {
+    "name": "Rusher",
+    "health": 50,
+    "armor": 0,
+    "speed": 5.4,
+    "damage": 10,
+    "range": 3,
+    "rate": 1,
+    "accuracy": 0.9,
+    "reaction": 0.5,
+    "color": "c77751",
+    "reward": 12
+  },
+  "heavy": {
+    "name": "Heavy",
+    "health": 140,
+    "armor": 35,
+    "speed": 1.8,
+    "damage": 12,
+    "range": 25,
+    "rate": 1.6,
+    "accuracy": 0.54,
+    "reaction": 1.2,
+    "color": "929876",
+    "reward": 25
+  },
+  "sniper": {
+    "name": "Sniper",
+    "health": 55,
+    "armor": 0,
+    "speed": 2,
+    "damage": 26,
+    "range": 65,
+    "rate": 0.45,
+    "accuracy": 0.82,
+    "reaction": 1.8,
+    "color": "7f9e94",
+    "reward": 18
+  },
+  "shotgun": {
+    "name": "Breacher",
+    "health": 85,
+    "armor": 10,
+    "speed": 3.4,
+    "damage": 16,
+    "range": 11,
+    "rate": 0.8,
+    "accuracy": 0.72,
+    "reaction": 0.75,
+    "color": "ac9375",
+    "reward": 18
+  },
+  "elite": {
+    "name": "Elite",
+    "health": 95,
+    "armor": 20,
+    "speed": 3.8,
+    "damage": 10,
+    "range": 32,
+    "rate": 2,
+    "accuracy": 0.72,
+    "reaction": 0.6,
+    "color": "8595b4",
+    "reward": 30
+  },
+  "boss": {
+    "name": "WARDEN",
+    "health": 650,
+    "armor": 75,
+    "speed": 2.5,
+    "damage": 18,
+    "range": 40,
+    "rate": 1.4,
+    "accuracy": 0.7,
+    "reaction": 1,
+    "color": "b79967",
+    "reward": 150
+  }
+}
