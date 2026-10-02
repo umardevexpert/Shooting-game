@@ -2,6 +2,7 @@
 import json
 from pathlib import Path
 import urllib.request
+import urllib.parse
 
 out = Path('build/asset-discovery')
 out.mkdir(parents=True, exist_ok=True)
@@ -28,3 +29,18 @@ for name, url in {
     'soldier-preview': 'https://quaternius.com/assets/images/fullres/ultimateanimatedcharacter.jpg',
 }.items():
     with urllib.request.urlopen(url, timeout=40) as response: (out / (name+'.jpg')).write_bytes(response.read())
+
+# Capture the publisher's license page for every newly integrated pack.
+import re
+with urllib.request.urlopen('https://quaternius.com/', timeout=40) as response:
+    homepage = response.read().decode()
+for href in sorted(set(re.findall(r'href=["\']([^"\']+)["\']', homepage))):
+    if 'pack' not in href or not any(term in href.lower() for term in ['gun', 'modularcharacter']):
+        continue
+    url = urllib.parse.urljoin('https://quaternius.com/', href)
+    try:
+        with urllib.request.urlopen(url, timeout=40) as response: page = response.read()
+        name = Path(urllib.parse.urlparse(url).path).stem
+        (out / ('publisher-' + name + '.html')).write_bytes(page)
+        print('PUBLISHER_LICENSE', url, 'CC0' in page.decode(errors='replace'), flush=True)
+    except Exception as error: print('PUBLISHER_ERROR', url, str(error), flush=True)
