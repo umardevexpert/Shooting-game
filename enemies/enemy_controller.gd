@@ -33,7 +33,7 @@ func _ready() -> void:
 	rng.randomize()
 	config = Catalog.enemies[kind].duplicate(true)
 	target = world.player
-	var body_scale := 1.8 if kind == "boss" else 1.25 if kind == "heavy" else 1.0
+	var body_scale: float = config.get("body_scale", 1.0)
 	set_meta("body_scale", body_scale)
 	collision_layer = 4
 	collision_mask = 1 | 2 | 4
@@ -48,10 +48,10 @@ func _ready() -> void:
 	health.died.connect(_die)
 	visual = ActorVisual.new()
 	add_child(visual)
-	visual.build(Color(config.color), kind == "heavy")
+	visual.build(Color(config.color))
+	visual.scale = Vector3.ONE * body_scale
 	visual.equip_weapon(config.get("weapon", "rifle"))
 	if kind == "boss":
-		visual.scale *= 1.2
 		boss_ring = Geometry.ring(world, float(Catalog.player.grenade_radius), Vector3.ZERO, Color("df785d"))
 		boss_ring.visible = false
 	decision_timer = rng.randf_range(0, 0.2)

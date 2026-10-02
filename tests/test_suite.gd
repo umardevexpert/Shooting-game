@@ -204,6 +204,10 @@ func _asset_tests() -> void:
 	for id in Catalog.weapons:
 		visual.equip_weapon(id)
 		models.append(visual.weapon.model.scene_file_path)
+	var sizes_match := true
+	for enemy in game.arena.spawner.active:
+		sizes_match = sizes_match and is_equal_approx(enemy.visual.scale.y, enemy.get_meta("body_scale"))
+	check(sizes_match, "Human enemy visuals and damage colliders use the same body scale")
 	check(models.size() == 8 and not models.any(func(path: String) -> bool: return models.count(path) > 1), "Eight weapon categories instantiate distinct imported models")
 	visual.equip_weapon("rifle")
 

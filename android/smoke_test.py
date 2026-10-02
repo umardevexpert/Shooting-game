@@ -35,6 +35,15 @@ def wait_screen(name, count=1):
     raise AssertionError(f"Android did not reach {name}, occurrence {count}")
 
 
+def wait_signal(message, timeout=20):
+    deadline = time.monotonic() + timeout
+    while time.monotonic() < deadline:
+        if message in logs():
+            return
+        time.sleep(0.5)
+    raise AssertionError(f"Android input was not processed: {message}")
+
+
 def screenshot(name):
     image = adb("exec-out", "screencap", "-p", binary=True)
     assert image.startswith(b"\x89PNG\r\n\x1a\n"), "Invalid Android screenshot"
@@ -104,14 +113,12 @@ def main():
     width, height = screenshot("04-aim")
     fire_x, fire_y = str(round(width * 0.945)), str(round(height * 0.786))
     adb("shell", "input", "swipe", fire_x, fire_y, fire_x, fire_y, "1000")
-    deadline = time.monotonic() + 10
-    while "IRONFALL_FIRE rifle" not in logs() and time.monotonic() < deadline:
-        time.sleep(0.5)
-    assert "IRONFALL_FIRE rifle" in logs(), "Native fire touch did not shoot"
+    wait_signal("IRONFALL_FIRE rifle")
     time.sleep(3)
     screenshot("04-fired")
     tap(0.812, 0.889)  # Reload button.
-    assert "IRONFALL_RELOAD rifle" in logs(), "Native reload touch did not begin reload"
+    wait_signal("IRONFALL_RELOAD rifle")
+    screenshot("04-reloading")
     print("PASS: Android native ADS, fire and reload inputs", flush=True)
     # Exercise the actual touchscreen pause control.
     tap(0.969, 0.047)

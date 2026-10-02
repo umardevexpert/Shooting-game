@@ -47,8 +47,18 @@ func _build_level() -> void:
 	var color := Color(definition.color)
 	environment = WorldEnvironment.new()
 	var settings := Environment.new()
-	settings.background_mode = Environment.BG_COLOR
-	settings.background_color = color.darkened(0.25)
+	settings.background_mode = Environment.BG_SKY
+	var sky_material := ProceduralSkyMaterial.new()
+	var night: bool = definition.theme == "night"
+	sky_material.sky_top_color = Color("142337") if night else Color("608ba9")
+	sky_material.sky_horizon_color = Color("344654") if night else Color("bdc6c6")
+	sky_material.ground_bottom_color = color.darkened(0.2)
+	sky_material.ground_horizon_color = sky_material.sky_horizon_color
+	var sky := Sky.new()
+	sky.sky_material = sky_material
+	sky.radiance_size = Sky.RADIANCE_SIZE_128
+	settings.sky = sky
+	settings.reflected_light_source = Environment.REFLECTION_SOURCE_SKY
 	settings.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	settings.ambient_light_color = Color("a9beca")
 	settings.ambient_light_energy = 0.65 if definition.theme != "night" else 0.36

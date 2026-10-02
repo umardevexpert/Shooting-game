@@ -13,7 +13,7 @@ var motion := "idle"
 var aim_pitch := 0.0
 var local_movement := Vector3.ZERO
 
-func build(color: Color, heavy: bool = false, civilian: bool = false) -> void:
+func build(color: Color, civilian: bool = false) -> void:
 	model = (CIVILIAN if civilian else OPERATOR).instantiate()
 	add_child(model)
 	model.rotation.y = PI
@@ -38,7 +38,6 @@ func build(color: Color, heavy: bool = false, civilian: bool = false) -> void:
 	weapon = WeaponVisual.new()
 	socket.add_child(weapon)
 	weapon.basis = reference.inverse().orthonormalized()
-	if heavy: scale *= 1.12
 	if civilian: weapon.hide()
 
 func equip_weapon(id: String) -> void:

@@ -58,3 +58,23 @@ Future assets must be licensed for distribution and adapted through the same
 presentation layer. Paid packs must not be committed where redistribution is
 prohibited. GPU frame time, LOD transitions and thermals require physical-device
 measurement; no 60 FPS claim is made from headless or emulator tests.
+
+## Reproduce the tactical cook
+
+The source-evidence GitHub workflow checks the publisher license pages, downloads
+only the pinned free Standard animation archive and verifies all ten mirrored
+character/firearm files against `tools/tactical_sources.json`. Runtime GLBs are
+already committed; source downloading is optional for developers replacing art.
+With network access, Python/NumPy/BeautifulSoup and Blender installed:
+
+```sh
+python3 tools/fetch_tactical_assets.py
+python3 tools/fetch_human_sources.py
+blender -b --python tools/prepare_tactical_models.py
+python3 tools/retarget_humanoids.py
+blender -b --python tools/prepare_firearms.py
+blender -b --python tools/prepare_modular_firearms.py
+```
+
+An updated cook changes output hashes. Review output in the game, record the
+new checksums in the asset manifest, and run the game tests before exporting.
