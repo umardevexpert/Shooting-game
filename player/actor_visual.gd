@@ -11,6 +11,7 @@ var hurt := 0.0
 var shot := 0.0
 var motion := "idle"
 var aim_pitch := 0.0
+var aim_target := Vector3.INF
 var local_movement := Vector3.ZERO
 
 func build(color: Color, civilian: bool = false) -> void:
@@ -54,6 +55,28 @@ func animate(delta: float, speed: float, aiming: bool, reloading: bool, dead: bo
 	if shot > 0.9: weapon.kick()
 	weapon.update(delta)
 	if aiming and not reloading and not dead and hurt <= 0 and weapon.visible:
+		_align_weapon()
 		ArmIK.reach(skeleton, "L", weapon.support_grip.global_position)
 	hurt = move_toward(hurt, 0, delta * 5)
 	shot = move_toward(shot, 0, delta * 8)
+
+func _align_weapon() -> void:
+	if weapon.aim_grip != Vector3.INF:
+		ArmIK.reach(skeleton, "R", global_transform * weapon.aim_grip)
+	var hand := skeleton.find_bone("hand.R")
+	var pose := skeleton.get_bone_global_pose(hand)
+	var world_basis := skeleton.global_basis.orthonormalized()
+	# Rotate the actual wrist and its attached model, keeping the grip in the hand.
+	# Two iterations compensate for the barrel's offset above the grip.
+	for iteration in range(2):
+		var gun_transform := skeleton.global_transform * pose * weapon.transform
+		var direction: Vector3 = global_basis * Vector3(0, sin(aim_pitch), -cos(aim_pitch))
+		if aim_target != Vector3.INF:
+			direction = aim_target - gun_transform * weapon.muzzle.position
+		if direction.length_squared() < 0.001: return
+		var correction := Basis(Quaternion(gun_transform.basis.z.normalized(), direction.normalized()))
+		pose.basis = world_basis.inverse() * correction * world_basis * pose.basis
+	skeleton.set_bone_global_pose(hand, pose)
+	skeleton.force_update_all_bone_transforms()
+	# BoneAttachment updates at frame end; rays and IK need this frame's pose now.
+	weapon.get_parent().transform = pose

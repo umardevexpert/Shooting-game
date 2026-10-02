@@ -190,6 +190,8 @@ func _asset_tests() -> void:
 	var left := visual.skeleton.find_bone("hand.L")
 	var hand_position: Vector3 = visual.skeleton.global_transform * visual.skeleton.get_bone_global_pose(left).origin
 	check(hand_position.distance_to(visual.weapon.support_grip.global_position) < 0.08, "Left-hand IK reaches the firearm support grip")
+	var to_target: Vector3 = (visual.aim_target - visual.weapon.muzzle.global_position).normalized() if visual.aim_target != Vector3.INF else visual.global_basis * Vector3(0, sin(visual.aim_pitch), -cos(visual.aim_pitch))
+	check(visual.weapon.global_basis.z.normalized().dot(to_target.normalized()) > 0.998, "Rendered firearm barrel aligns with the actual aim target")
 	check(visual.weapon.get_parent() is BoneAttachment3D and visual.weapon.get_parent().bone_name == "hand.R", "Weapon remains attached to the animated hand bone")
 	check(game.arena.player.weapons.muzzle_origin().distance_to(visual.weapon.muzzle.global_position) < 0.03, "Clear muzzle ray starts at actual model muzzle socket")
 	check(MaterialLibrary.get_material("container2").normal_texture != null and MaterialLibrary.get_material("mid_cargo_box").albedo_texture != null, "Imported environment materials load albedo and normal maps")
@@ -239,12 +241,19 @@ func _combat_tests() -> void:
 	var grenade_count := arena.player.grenades
 	arena.player._action("grenade")
 	check(arena.player.grenades == grenade_count - 1, "Grenade launches a pooled physics projectile")
+	var explosion_hp := arena.player.health.current
+	arena.area_damage(arena.player.global_position + Vector3.UP, 3.4, 20, arena.player)
+	check(arena.player.health.current < explosion_hp, "Area damage reaches the player without a typed enemy-array error")
 	var previous_hp := arena.player.health.current
 	arena.player.take_damage(20, Vector3(0, 0, 1))
 	check(arena.player.health.current < previous_hp, "Enemy damage reaches player health and HUD")
 	arena.player.take_damage(10000, Vector3.ZERO)
 	await frames(3)
 	check(game.state == game.State.RESULT and game.ui.screen == "failed", "Player death produces mission failure screen")
+	var death_hips := arena.player.visual.skeleton.find_bone("hips")
+	var death_start := arena.player.visual.skeleton.get_bone_pose_rotation(death_hips)
+	await frames(20)
+	check(death_start.angle_to(arena.player.visual.skeleton.get_bone_pose_rotation(death_hips)) > 0.01, "Human death animation continues behind the failure overlay while gameplay stays paused")
 	game.start_mission(0)
 	await frames(5)
 	check(game.arena.player.health.current == 100 and not get_tree().paused, "Restart replaces world and resets combat state")

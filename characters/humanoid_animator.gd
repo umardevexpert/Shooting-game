@@ -9,8 +9,11 @@ var was_dead := false
 var previous_shot := 0.0
 var previous_hit := 0.0
 var movement := Vector2.ZERO
+var result_death_remaining := 0.0
 
 func setup(model: Node3D) -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
+	set_process(false)
 	skeleton = model.find_child("Skeleton3D", true, false)
 	player = model.find_child("AnimationPlayer", true, false)
 	player.play("aim_center")
@@ -140,3 +143,15 @@ func update(delta: float, speed: float, aiming: bool, pitch: float, reloading: b
 	previous_shot = shot
 	previous_hit = hurt
 	tree.advance(delta)
+
+func play_result_death() -> void:
+	was_dead = true
+	tree.set("parameters/death/blend_amount", 1.0)
+	result_death_remaining = player.get_animation("combat/death").length
+	set_process(true)
+
+func _process(delta: float) -> void:
+	if not get_tree().paused: return
+	tree.advance(delta)
+	result_death_remaining -= delta
+	if result_death_remaining <= 0: set_process(false)

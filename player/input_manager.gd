@@ -127,7 +127,7 @@ func _draw() -> void:
 		"pause": Vector2(size.x - 40, 34)}
 	var opacity: float = Profile.data.settings.opacity
 	var font := ThemeDB.fallback_font
-	var labels := {"fire": "FIRE", "aim": "ADS", "reload": "R", "switch": "SW", "interact": "USE", "grenade": "G", "dodge": "ROLL", "sprint": "RUN", "pause": "II"}
+	var labels := {"fire": "FIRE", "aim": "ADS", "reload": "R", "switch": "SW", "interact": "USE", "grenade": "G", "dodge": "DODGE", "sprint": "RUN", "pause": "II"}
 	for action in regions:
 		var radius := 39.0 if action == "fire" else 29.0
 		var active: bool = action in button_touches.values() or (action == "aim" and aim)

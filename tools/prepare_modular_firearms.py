@@ -35,4 +35,6 @@ for name,identifier,length,grip in [('AR_4','rifle',.78,.42),('AR_1','burst',.90
  elevation=sum(v.z for v in tip)/len(tip)
  config[identifier]={'model':f'res://assets/models/weapons/{identifier}.glb','scale':1,'offset':[0,0,.03],'muzzle':[0,elevation,(high-origin.x)*size+.031],'rotation':0,'support_grip':[-.03,-.02,length*.15]}
  print('MODULAR_FIREARM',identifier,'length',length,'bytes',target.stat().st_size)
+for identifier, visual in config.items():
+ visual['aim_grip']=[.1,1.42,-.38 if identifier=='pistol' else -.32]
 (ROOT/'data/weapon_visuals.json').write_text(json.dumps(config,indent=2)+'\n')

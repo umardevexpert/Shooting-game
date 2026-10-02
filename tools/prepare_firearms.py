@@ -35,4 +35,6 @@ for name,identifier,length,grip in [('Pistol','pistol',.27,.22),('P90','smg',.60
  elevation=sum(v.z for v in tip)/len(tip)
  CONFIG[identifier]={'model':f'res://assets/models/weapons/{identifier}.glb','scale':1,'offset':[0,0,.03],'muzzle':[0,elevation,(high-origin[axis])*size+.031],'rotation':0,'support_grip':[0,-.01,length*.15]}
  print('FIREARM',identifier,'meters',length,'muzzle',CONFIG[identifier]['muzzle'],'bytes',target.stat().st_size)
+for identifier, visual in CONFIG.items():
+ visual['aim_grip']=[.1,1.42,-.38 if identifier=='pistol' else -.32]
 (ROOT/'build/firearm-visuals.json').write_text(json.dumps(CONFIG,indent=2))

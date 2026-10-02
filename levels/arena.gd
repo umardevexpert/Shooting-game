@@ -122,7 +122,8 @@ func line_of_sight(from: Vector3, to: Vector3) -> bool:
 	return get_world_3d().direct_space_state.intersect_ray(PhysicsRayQueryParameters3D.create(from, to, 1)).is_empty()
 
 func area_damage(origin: Vector3, radius: float, damage: float, source: Node3D) -> void:
-	var actors: Array = spawner.active.duplicate()
+	var actors: Array = []
+	actors.append_array(spawner.active)
 	actors.append(player)
 	if is_instance_valid(objectives.target): actors.append(objectives.target)
 	if is_instance_valid(objectives.engineer): actors.append(objectives.engineer)

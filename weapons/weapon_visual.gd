@@ -7,6 +7,7 @@ var muzzle := Marker3D.new()
 var casing_socket := Marker3D.new()
 var support_grip := Marker3D.new()
 var muzzle_rest := Vector3.ZERO
+var aim_grip := Vector3.INF
 var recoil := 0.0
 var equipped := ""
 var rest_position := Vector3.ZERO
@@ -31,6 +32,7 @@ func equip(id: String) -> void:
 	if not scenes.has(path): scenes[path] = load(path)
 	model = scenes[path].instantiate()
 	add_child(model)
+	aim_grip = _vector(config.aim_grip) if config.has("aim_grip") else Vector3.INF
 	var size: float = config.scale
 	model.scale = Vector3.ONE * size
 	model.rotation.y = deg_to_rad(float(config.rotation))

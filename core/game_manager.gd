@@ -121,6 +121,8 @@ func mission_failed(reason: String = "Operative down") -> void:
 	if state != State.PLAYING: return
 	state = State.RESULT
 	failure_reason = reason
+	if is_instance_valid(arena) and arena.player.health.dead:
+		arena.player.visual.animator.play_result_death()
 	Audio.play("fail")
 	_show_result.call_deferred(false)
 

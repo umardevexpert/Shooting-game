@@ -68,8 +68,9 @@ func _physics_process(delta: float) -> void:
 	# Muzzle uses the actor's facing, while aim is always obtained from the camera.
 	visual.aim_pitch = camera_rig.pitch
 	visual.local_movement = visual.global_basis.inverse() * velocity
-	weapons.update(delta, controls.fire and dodge_remaining <= 0, controls.aim)
+	visual.aim_target = camera_rig.ray_target(float(weapons.current().config.range)) if controls.aim or controls.fire else Vector3.INF
 	visual.animate(delta, Vector2(velocity.x, velocity.z).length(), controls.aim or controls.fire, weapons.current().reload_remaining > 0, false)
+	weapons.update(delta, controls.fire and dodge_remaining <= 0, controls.aim)
 	step_time -= delta
 	if desired.length_squared() > 0.1 and step_time <= 0:
 		step_time = 0.32 if controls.sprint else 0.48

@@ -93,6 +93,7 @@ func _physics_process(delta: float) -> void:
 		_shoot()
 	if kind == "boss": _boss_update(delta)
 	visual.local_movement = visual.global_basis.inverse() * velocity
+	visual.aim_target = target.global_position + Vector3.UP * 1.1
 	visual.aim_pitch = asin((target.global_position + Vector3.UP * 1.1 - visual.muzzle_origin()).normalized().y)
 	visual.animate(delta, Vector2(velocity.x, velocity.z).length(), state == State.ATTACK, reload_time > 0, false)
 
