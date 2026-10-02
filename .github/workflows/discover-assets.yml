@@ -2,7 +2,8 @@ name: Inspect official asset pack licenses
 on:
   workflow_dispatch:
   push:
-    paths: ['tools/discover_asset_packs.py', '.github/workflows/discover-assets.yml']
+    branches: [asset-pipeline]
+    paths: ['tools/discover_asset_packs.py', 'tools/fetch_human_sources.py', '.github/workflows/discover-assets.yml']
 permissions:
   contents: read
 jobs:
@@ -11,7 +12,9 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
+      - run: python3 -m pip install gdown==5.2.0 beautifulsoup4==4.12.3
       - run: python3 tools/discover_asset_packs.py
+      - run: python3 tools/fetch_human_sources.py
       - uses: actions/upload-artifact@v4
         with:
           name: ironfall-asset-source-evidence
