@@ -15,9 +15,13 @@ out=Path('build/asset-discovery');out.mkdir(parents=True,exist_ok=True)
 for name, folder in [('animated-guns-fbx','155Ce5mXbboLYaAADOIBDl9N5EOf0zm8X'),('guns-fbx','1hLw5riEcdvRgExDks3ywcAaTIlTX5J3Z')]:
     try:
         listing=gdown.download_folder(id=folder,output=str(out/name)+'/',skip_download=True,quiet=True)
-        print('DRIVE_FILES',name,repr(listing),flush=True)
         for item in listing or []:
-            print('DRIVE_ITEM',repr(item),flush=True)
+            if Path(item.path).name in ['AssaultRifle_1.fbx','AssaultRifle2_1.fbx','Pistol_1.fbx','Shotgun_1.fbx','SniperRifle_1.fbx','SubmachineGun_1.fbx','AssaultRifle.fbx','Pistol.fbx','Shotgun.fbx','SniperRifle.fbx','Bullpup.fbx','Revolver.fbx']:
+                target=out/'conventional-weapons'/Path(item.path).name
+                target.parent.mkdir(parents=True,exist_ok=True)
+                result=gdown.download(id=item.id,output=str(target),quiet=True)
+                assert result and target.is_file(),item.path
+                print('GUN_DOWNLOADED',target.name,target.stat().st_size,hashlib.sha256(target.read_bytes()).hexdigest(),flush=True)
     except Exception as error:print('DRIVE_ERROR',name,str(error),flush=True)
 for name in ['universal-base-characters','universal-animation-library']:
     try:
@@ -33,5 +37,28 @@ for name in ['universal-base-characters','universal-animation-library']:
         download_page=opener.open(urllib.parse.urljoin(base,data['url']),timeout=40).read().decode()
         (out/(name+'-free-download.html')).write_text(download_page)
         soup=BeautifulSoup(download_page,'html.parser')
-        print('ITCH_FREE_PAGE',name,[(x.get('data-upload_id'),x.get_text(' ',strip=True)) for x in soup.select('[data-upload_id]')],flush=True)
+        links=soup.select('[data-upload_id]')
+        assert len(links)==1,'Only the single officially free Standard file is permitted'
+        upload=links[0]['data-upload_id']
+        token=soup.find('meta',attrs={'name':'csrf_token'})['value']
+        payload=urllib.parse.urlencode({'csrf_token':token}).encode()
+        response=opener.open(urllib.request.Request(base+'/file/'+upload,data=payload,headers={'Referer':base+'/purchase','X-Requested-With':'XMLHttpRequest'}),timeout=40)
+        file_info=json.load(response)
+        assert 'url'in file_info,file_info
+        archives=Path('build/human-sourcearchives');archives.mkdir(exist_ok=True)
+        archive=archives/(name+'.zip')
+        with opener.open(file_info['url'],timeout=180) as source,archive.open('wb') as dest:
+            import shutil
+            shutil.copyfileobj(source,dest)
+        print('FREE_ARCHIVE',name,archive.stat().st_size,hashlib.sha256(archive.read_bytes()).hexdigest(),flush=True)
+        with zipfile.ZipFile(archive) as z:
+            inventory=[{'path':info.filename,'bytes':info.file_size} for info in z.infolist() if not info.is_dir()]
+            (out/(name+'-inventory.json')).write_text(json.dumps(inventory,indent=2))
+            print('FREE_MODELS',name,[entry for entry in inventory if entry['path'].lower().endswith(('.glb','.gltf','.fbx','.txt'))],flush=True)
+            candidates=[entry for entry in inventory if entry['path'].lower().endswith('.glb')]
+            if candidates:
+                entry=next((e for e in candidates if 'male' in e['path'].lower() and 'female' not in e['path'].lower()),candidates[0])
+                if entry['bytes']<30_000_000:
+                    target=out/'human-models'/Path(entry['path']).name;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(z.read(entry['path']))
+                    print('HUMAN_MODEL_EXTRACTED',str(target),entry['bytes'],flush=True)
     except Exception as error:print('ITCH_ERROR',name,str(error),flush=True)
