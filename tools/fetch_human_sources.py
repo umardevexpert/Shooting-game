@@ -70,7 +70,8 @@ for name in ['universal-base-characters','universal-animation-library','modular-
                 for asset in model.get('buffers',[])+model.get('images',[]):
                     if 'uri' not in asset:continue
                     uri=asset['uri'];source_name=posixpath.normpath(str(parent/uri))
-                    target=target_folder/uri;target.parent.mkdir(parents=True,exist_ok=True);if source_name not in z.namelist():
+                    target=target_folder/uri;target.parent.mkdir(parents=True,exist_ok=True)
+                    if source_name not in z.namelist():
                         source_name=source_name.replace('_png.png','.png')
                     target.write_bytes(z.read(source_name))
                 print('HUMAN_GLTF_EXTRACTED',flush=True)
