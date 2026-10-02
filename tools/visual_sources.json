@@ -1,0 +1,61 @@
+{
+  "repository": "godotengine/tps-demo",
+  "revision": "a82f15448e9b015440d3bbdf5e10801b260c4e9f",
+  "license": "CC-BY-3.0",
+  "authors": [
+    "Juan Linietsky",
+    "Fernando Miguel Calabró"
+  ],
+  "files": [
+    {
+      "path": "player/model/player.glb",
+      "blob_sha": "d4cfd9ac472f1a9798f6daa1ad0e78b6c75a5575",
+      "size": 23844032
+    },
+    {
+      "path": "player/textures/player_robot_albedo.png",
+      "blob_sha": "e93e4ce183884a7a53db97af31e79bb6c9a93175",
+      "size": 1127472
+    },
+    {
+      "path": "player/textures/player_robot_emissive.png",
+      "blob_sha": "ae4d293e121fb3960b29913910a6cba0901f8541",
+      "size": 10946
+    },
+    {
+      "path": "player/textures/player_robot_normal.png",
+      "blob_sha": "857b47a3e1f2cd66c21819d3499fc5a09e510a01",
+      "size": 1429561
+    },
+    {
+      "path": "player/textures/player_robot_orm.png",
+      "blob_sha": "1379ef96453bae4763b1488c352490451af7754e",
+      "size": 4080059
+    },
+    {
+      "path": "level/geometry/models/props.glb",
+      "blob_sha": "76a3ffab0684dc7ffc4e24f2c8fa79b05f04a444",
+      "size": 22223384
+    },
+    {
+      "path": "level/geometry/models/structure.glb",
+      "blob_sha": "935c84aef0478bb970d5d3e4a79b9bcda03a5814",
+      "size": 29053360
+    },
+    {
+      "path": "level/textures/props/container1_albedo.png",
+      "blob_sha": "ae3d58df81a7bf2a9ad289218f5b684bc2b2ca91",
+      "size": 466199
+    },
+    {
+      "path": "level/textures/props/container1_normal.png",
+      "blob_sha": "2f28384e13e9b124585914878a684e5be5756067",
+      "size": 717666
+    },
+    {
+      "path": "level/textures/props/container1_orm.png",
+      "blob_sha": "ddc18d67029ee7e6f0790bfff3490d29c605240f",
+      "size": 1329784
+    }
+  ]
+}
