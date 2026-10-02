@@ -12,12 +12,14 @@ OUTPUT = Path("build/android-smoke")
 
 
 def adb(*args, binary=False):
-    result = subprocess.run(["adb", *args], capture_output=True, check=True, timeout=40)
+    result = subprocess.run(["adb", *args], capture_output=True, timeout=40)
+    if result.returncode:
+        raise RuntimeError(f"adb {args}: {result.stderr.decode(errors='replace')}")
     return result.stdout if binary else result.stdout.decode("utf-8", errors="replace")
 
 
 def logs():
-    return adb("logcat", "-d", "-v", "brief")
+    return adb("logcat", "-d", "-v", "brief", "godot:I", "AndroidRuntime:E", "*:S")
 
 
 def wait_screen(name, count=1):
@@ -55,6 +57,7 @@ def main():
     adb("shell", "wm", "size", "720x1280")
     adb("shell", "settings", "put", "system", "accelerometer_rotation", "0")
     adb("shell", "settings", "put", "system", "user_rotation", "1")
+    adb("shell", "settings", "put", "secure", "immersive_mode_confirmations", "confirmed")
     adb("logcat", "-c")
     resolved = adb("shell", "cmd", "package", "resolve-activity", "--brief", "-a",
                    "android.intent.action.MAIN", "-c", "android.intent.category.LAUNCHER", PACKAGE)
@@ -96,7 +99,7 @@ def main():
     assert profile() == saved, "Android save changed on process restart"
     screenshot("07-relaunch")
     assert adb("shell", "pidof", PACKAGE).strip(), "Android process exited"
-    assert not re.search(r"SCRIPT ERROR:|Parse Error:|Failed loading resource|FATAL EXCEPTION", logs()), "Android runtime reported errors"
+    assert not re.search(r"SCRIPT ERROR:|Parse Error:|Failed loading resource|FATAL EXCEPTION|Program linking failed", logs()), "Android runtime reported errors"
     print("ANDROID SMOKE PASS: launch, real touch navigation, mission, pause/resume, background/foreground, save/relaunch", flush=True)
 
 

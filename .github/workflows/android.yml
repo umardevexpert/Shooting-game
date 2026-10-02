@@ -138,7 +138,7 @@ jobs:
           target: google_apis
           profile: pixel_2
           ram-size: 2048M
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -no-snapshot -camera-back none
+          emulator-options: -no-window -gpu swangle -noaudio -no-boot-anim -no-snapshot -camera-back none
           disable-animations: true
           script: python3 android/smoke_test.py
       - name: Upload Android screenshots and logs
